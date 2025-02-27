@@ -7,6 +7,14 @@
       "RelativeMoniker": "D:0:0:{6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4}|EmotionAppBackend\\EmotionAppBackend.csproj|solutionrelative:emotionappbackend\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4}|EmotionAppBackend\\EmotionAppBackend.csproj|e:\\demo\\emotionapp\\backend\\emotionappbackend\\emotionappbackend\\junit\\mysqlconnecttest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4}|EmotionAppBackend\\EmotionAppBackend.csproj|solutionrelative:emotionappbackend\\junit\\mysqlconnecttest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4}|EmotionAppBackend\\EmotionAppBackend.csproj|e:\\demo\\emotionapp\\backend\\emotionappbackend\\emotionappbackend\\emotionappbackend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4}|EmotionAppBackend\\EmotionAppBackend.csproj|solutionrelative:emotionappbackend\\emotionappbackend.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4}|EmotionAppBackend\\EmotionAppBackend.csproj|e:\\demo\\emotionapp\\backend\\emotionappbackend\\emotionappbackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4}|EmotionAppBackend\\EmotionAppBackend.csproj|solutionrelative:emotionappbackend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -18,8 +26,34 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MySqlConnectTest.cs",
+              "DocumentMoniker": "E:\\demo\\EmotionApp\\backend\\EmotionAppBackend\\EmotionAppBackend\\Junit\\MySqlConnectTest.cs",
+              "RelativeDocumentMoniker": "EmotionAppBackend\\Junit\\MySqlConnectTest.cs",
+              "ToolTip": "E:\\demo\\EmotionApp\\backend\\EmotionAppBackend\\EmotionAppBackend\\Junit\\MySqlConnectTest.cs",
+              "RelativeToolTip": "EmotionAppBackend\\Junit\\MySqlConnectTest.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwAkAAABTAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-02-27T06:44:08.374Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "EmotionAppBackend",
+              "DocumentMoniker": "E:\\demo\\EmotionApp\\backend\\EmotionAppBackend\\EmotionAppBackend\\EmotionAppBackend.csproj",
+              "RelativeDocumentMoniker": "EmotionAppBackend\\EmotionAppBackend.csproj",
+              "ToolTip": "E:\\demo\\EmotionApp\\backend\\EmotionAppBackend\\EmotionAppBackend\\EmotionAppBackend.csproj",
+              "RelativeToolTip": "EmotionAppBackend\\EmotionAppBackend.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAnAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-02-27T06:29:08.239Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -28,20 +62,20 @@
               "RelativeDocumentMoniker": "EmotionAppBackend\\Controllers\\HomeController.cs",
               "ToolTip": "E:\\demo\\EmotionApp\\backend\\EmotionAppBackend\\EmotionAppBackend\\Controllers\\HomeController.cs",
               "RelativeToolTip": "EmotionAppBackend\\Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAhAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAuwAYAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T14:37:15.214Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Program.cs",
               "DocumentMoniker": "E:\\demo\\EmotionApp\\backend\\EmotionAppBackend\\EmotionAppBackend\\Program.cs",
               "RelativeDocumentMoniker": "EmotionAppBackend\\Program.cs",
               "ToolTip": "E:\\demo\\EmotionApp\\backend\\EmotionAppBackend\\EmotionAppBackend\\Program.cs",
               "RelativeToolTip": "EmotionAppBackend\\Program.cs",
-              "ViewState": "AgIAABIAAAAAAAAAAAAAAC8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADIAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-25T14:28:25.162Z",
               "EditorCaption": ""
