@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "n/prZFu0udxHMo3v/b1ACKcPYk5jRLDNjCrpkwL7FyI=",
+  "Source": "EmotionAppBackend",
+  "BasePath": "_content/EmotionAppBackend",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

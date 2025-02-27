@@ -1,0 +1,6 @@
+﻿services:
+  emotionappbackend:
+    image: emotionappbackend
+    build:
+      context: .
+      dockerfile: EmotionAppBackend/Dockerfile

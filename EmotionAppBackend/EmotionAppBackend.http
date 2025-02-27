@@ -1,0 +1,6 @@
+@EmotionAppBackend_HostAddress = http://localhost:5081
+
+GET {{EmotionAppBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
