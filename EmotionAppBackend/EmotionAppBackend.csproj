@@ -9,8 +9,13 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="MSTest" Version="3.8.2" />
-        <PackageReference Include="MySql.Data" Version="8.0.33" />
+        <PackageReference Include="MySql.EntityFrameworkCore" Version="9.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.0" />
     </ItemGroup>
 
@@ -23,6 +28,9 @@
     <ItemGroup>
       <Folder Include="Controllers\" />
       <Folder Include="Models\" />
+      <Folder Include="Data\" />
+      <Folder Include="Repositories\" />
+      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>

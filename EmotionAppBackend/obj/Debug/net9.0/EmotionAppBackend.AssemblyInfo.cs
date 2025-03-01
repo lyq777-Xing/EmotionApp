@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EmotionAppBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+481ceed255e059f57cdfc5295fc196d49baf8ad3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cb1d64d95a64965a107feabce2ec48d5749ea004")]
 [assembly: System.Reflection.AssemblyProductAttribute("EmotionAppBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EmotionAppBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,13 +1,31 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using Microsoft.OpenApi.Models;
+using System;
+
+var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// 添加 Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Emotion app", Version = "v1" });
+});
 
 // 注册 MVC 控制器服务，自动扫描所有 Controller（需放在项目中符合约定的 Controller 类）
 builder.Services.AddControllers();
+
+// 添加数据库服务
+//builder.Services.AddDbContext<AppDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+// 依赖注入
+//builder.Services.AddScoped<UserService>();
+
 
 var app = builder.Build();
 
@@ -29,7 +47,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
+/*app.MapGet("/weatherforecast", () =>
 {
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
@@ -41,7 +59,10 @@ app.MapGet("/weatherforecast", () =>
         .ToArray();
     return forecast;
 })
-.WithName("GetWeatherForecast");
+.WithName("GetWeatherForecast");*/
+
+//TODO
+//app.UseAuthorization();
 
 // 使用 MapControllers()，让框架自动根据控制器上的 [Route] 属性配置路由
 app.MapControllers();
