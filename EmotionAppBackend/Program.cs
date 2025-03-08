@@ -1,12 +1,32 @@
 ﻿using Microsoft.OpenApi.Models;
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Requires Microsoft.AspNetCore.Authentication.JwtBearer
-builder.Services.AddAuthentication()
-    .AddJwtBearer();
-    //.AddJwtBearer("Bearer");
+// 获取 JWT 配置
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
+
+
+// 添加 JWT 鉴权
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key)
+        };
+    });
 
 /**
     在以下代码中，将调用 AddAuthorizationBuilder，这会：
@@ -17,11 +37,20 @@ builder.Services.AddAuthentication()
         一个通过 RequireClaim 实现的基于声明的要求，即用户必须提供 greetings_api 范围声明。
     admin_greetings 策略作为 /hello 终结点所需的策略提供。
  */
-builder.Services.AddAuthorizationBuilder()
-  .AddPolicy("admin_greetings", policy =>
-        policy
-            .RequireRole("admin")
-            .RequireClaim("scope", "greetings_api"));
+//builder.Services.AddAuthorizationBuilder()
+//  .AddPolicy("admin_greetings", policy =>
+//        policy
+//            .RequireRole("admin")
+//            .RequireClaim("scope", "greetings_api"));
+
+// 添加授权
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+});
+
+
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -53,8 +82,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    
-    
+    app.MapScalarApiReference();
+    Console.WriteLine($"http://localhost:5081/scalar");
     app.UseSwagger();
     app.UseSwaggerUI();
 
@@ -66,27 +95,6 @@ app.UseAuthorization(); // 使用授权服务
 
 app.UseHttpsRedirection();
 
-//var summaries = new[]
-//{
-//    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-//};
-
-/*app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");*/
-
-//TODO
-//app.UseAuthorization();
 
 // 使用 MapControllers()，让框架自动根据控制器上的 [Route] 属性配置路由
 app.MapControllers();
