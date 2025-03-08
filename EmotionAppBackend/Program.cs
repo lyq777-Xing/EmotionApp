@@ -1,8 +1,27 @@
 ﻿using Microsoft.OpenApi.Models;
-using Scalar.AspNetCore;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Requires Microsoft.AspNetCore.Authentication.JwtBearer
+builder.Services.AddAuthentication()
+    .AddJwtBearer();
+    //.AddJwtBearer("Bearer");
+
+/**
+    在以下代码中，将调用 AddAuthorizationBuilder，这会：
+        将与授权相关的服务添加到 DI 容器。
+        返回一个 AuthorizationBuilder，它可用于直接注册身份验证策略。
+    该代码创建了一个名为 admin_greetings 的新授权策略，该策略封装了两个授权要求：
+        一个通过 RequireRole 实现的基于角色的要求，面向具有 admin 角色的用户。
+        一个通过 RequireClaim 实现的基于声明的要求，即用户必须提供 greetings_api 范围声明。
+    admin_greetings 策略作为 /hello 终结点所需的策略提供。
+ */
+builder.Services.AddAuthorizationBuilder()
+  .AddPolicy("admin_greetings", policy =>
+        policy
+            .RequireRole("admin")
+            .RequireClaim("scope", "greetings_api"));
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -10,7 +29,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 
 // 添加 Swagger
-builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Emotion app", Version = "v1" });
@@ -34,18 +53,23 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.MapScalarApiReference();
-
+    
+    
     app.UseSwagger();
     app.UseSwaggerUI();
+
 }
+
+app.UseCors();// 允许跨域请求
+app.UseAuthentication();// 使用鉴权服务
+app.UseAuthorization(); // 使用授权服务
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+//var summaries = new[]
+//{
+//    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+//};
 
 /*app.MapGet("/weatherforecast", () =>
 {
