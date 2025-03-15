@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 [TestClass]
 public class MathUtilsTests
@@ -10,7 +11,7 @@ public class MathUtilsTests
     {
         //try
         //{
-            using (var context = new AppDbContext(new() { }))
+            using (var context = new AppDbContext(new DbContextOptions<AppDbContext>()))
             {
                 var users = context.Users.ToList(); // 使用 EF Core 查询所有用户
 

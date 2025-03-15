@@ -10,10 +10,10 @@ public class AppDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            //optionsBuilder.UseMySql(,
-            //new MySqlServerVersion(new Version(8, 0, 40)));
-            //options => options.EnableRetryOnFailure());
-            var connectionString = "server=cloud.lk233.link;user=root;password=lyq;database=EmotionApp;";
+            optionsBuilder.UseMySql("server=118.31.55.155;user=root;password=lyq;database=EmotionApp;",
+                new MySqlServerVersion(new Version(8, 0, 40)),
+                mySqlOptions => mySqlOptions.EnableRetryOnFailure());
+            /*var connectionString = "server=cloud.lk233.link;user=root;password=lyq;database=EmotionApp;";
             var serverVersion = new MySqlServerVersion(new Version(8, 0, 40));
             builder.Services.AddDbContext<AppDbContext>(
                 dbContextOptions => dbContextOptions
@@ -23,7 +23,7 @@ public class AppDbContext : DbContext
                     .LogTo(Console.WriteLine, LogLevel.Information)
                     .EnableSensitiveDataLogging()
                     .EnableDetailedErrors()
-            );
+            );*/
         }
     }
     public DbSet<User> Users { get; set; }
