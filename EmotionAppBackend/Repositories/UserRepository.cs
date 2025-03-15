@@ -1,14 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
-public class UserRepository
-{
-    private readonly AppDbContext _context;
-
-    public UserRepository(AppDbContext context)
-    {
-        _context = context;
-    }
-
+public class UserRepository(AppDbContext _context)
+{ 
     public async Task<List<User>> GetAllUsers() => await _context.Users.ToListAsync();
 
     public async Task<User?> GetUserById(int id) => await _context.Users.FindAsync(id);
@@ -16,6 +9,9 @@ public class UserRepository
     public async Task AddUser(User user)
     {
         _context.Users.Add(user);
+        //var userOrders = from u in _context.Users
+        //                 join o in _context.Orders on u.Id equals o.UserId
+        //                 select new { u.Name, o.OrderNumber };
         await _context.SaveChangesAsync();
     }
 }

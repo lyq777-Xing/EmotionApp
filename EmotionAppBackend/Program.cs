@@ -1,8 +1,8 @@
-﻿using Microsoft.OpenApi.Models;
-using System;
+﻿using System;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
+using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]!);
 
-
 // 添加 JWT 鉴权
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -24,7 +24,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtSettings["Issuer"],
             ValidAudience = jwtSettings["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(key)
+            IssuerSigningKey = new SymmetricSecurityKey(key),
         };
     });
 
@@ -49,8 +49,6 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
     options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
 });
-
-
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -86,15 +84,13 @@ if (app.Environment.IsDevelopment())
     Console.WriteLine($"http://localhost:5081/scalar");
     app.UseSwagger();
     app.UseSwaggerUI();
-
 }
 
-app.UseCors();// 允许跨域请求
-app.UseAuthentication();// 使用鉴权服务
+app.UseCors(); // 允许跨域请求
+app.UseAuthentication(); // 使用鉴权服务
 app.UseAuthorization(); // 使用授权服务
 
 app.UseHttpsRedirection();
-
 
 // 使用 MapControllers()，让框架自动根据控制器上的 [Route] 属性配置路由
 app.MapControllers();
