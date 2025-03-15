@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
@@ -66,8 +67,18 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddControllers();
 
 // 添加数据库服务
-//builder.Services.AddDbContext<AppDbContext>(options =>
-//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 40));
+
+builder.Services.AddDbContext<AppDbContext>(
+    dbContextOptions => dbContextOptions
+        .UseMySql(connectionString, serverVersion)
+        // The following three options help with debugging, but should
+        // be changed or removed for production.
+        .LogTo(Console.WriteLine, LogLevel.Information)
+        .EnableSensitiveDataLogging()
+        .EnableDetailedErrors()
+);
 
 
 // 依赖注入

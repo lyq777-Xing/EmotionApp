@@ -1,37 +1,29 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MySql.Data.MySqlClient;
+using System;
+using System.Linq;
 
 [TestClass]
 public class MathUtilsTests
 {
     [TestMethod]
-    public void Add_TwoNumbers_ReturnsSum()
+    public void MysqlTest()
     {
-        string connectionString = "server=localhost;user=root;password=lyq;database=EmotionApp;";
-
-        using (MySqlConnection connection = new MySqlConnection(connectionString))
-        {
-            try
+        //try
+        //{
+            using (var context = new AppDbContext(new() { }))
             {
-                connection.Open();
+                var users = context.Users.ToList(); // 使用 EF Core 查询所有用户
+
                 Console.WriteLine("Connected to MySQL!");
-
-                // 示例：执行查询
-                string query = "SELECT * FROM user;";
-                MySqlCommand command = new MySqlCommand(query, connection);
-
-                using (MySqlDataReader reader = command.ExecuteReader())
+                foreach (var user in users)
                 {
-                    while (reader.Read())
-                    {
-                        Console.WriteLine(reader["user_name"].ToString());
-                    }
+                    Console.WriteLine(user.Id);
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error: " + ex.Message);
-            }
-        }
+        //}
+        //catch (Exception ex)
+        //{
+        //    Console.WriteLine("Error: " + ex.Message);
+        //}
     }
 }
