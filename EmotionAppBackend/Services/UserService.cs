@@ -1,3 +1,5 @@
+using EmotionAppBackend.Models;
+
 public class UserService
 {
     private readonly UserRepository _userRepository; 

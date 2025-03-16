@@ -1,3 +1,4 @@
+using EmotionAppBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
 public class UserRepository(AppDbContext _context)

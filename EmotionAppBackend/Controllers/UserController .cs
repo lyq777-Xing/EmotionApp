@@ -1,3 +1,4 @@
+using EmotionAppBackend.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +25,6 @@ public class UserController : ControllerBase
     public async Task<IActionResult> CreateUser([FromBody] User user)
     {
         await _userService.AddUser(user);
-        return CreatedAtAction(nameof(GetUsers), new { id = user.Id }, user);
+        return CreatedAtAction(nameof(GetUsers), new { id = user.UserId }, user);
     }
 }
