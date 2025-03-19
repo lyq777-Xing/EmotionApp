@@ -29,20 +29,18 @@ builder
         };
     });
 
-/**
-    在以下代码中，将调用 AddAuthorizationBuilder，这会：
+/*    在以下代码中，将调用 AddAuthorizationBuilder，这会：
         将与授权相关的服务添加到 DI 容器。
         返回一个 AuthorizationBuilder，它可用于直接注册身份验证策略。
     该代码创建了一个名为 admin_greetings 的新授权策略，该策略封装了两个授权要求：
         一个通过 RequireRole 实现的基于角色的要求，面向具有 admin 角色的用户。
         一个通过 RequireClaim 实现的基于声明的要求，即用户必须提供 greetings_api 范围声明。
     admin_greetings 策略作为 /hello 终结点所需的策略提供。
- */
-//builder.Services.AddAuthorizationBuilder()
-//  .AddPolicy("admin_greetings", policy =>
-//        policy
-//            .RequireRole("admin")
-//            .RequireClaim("scope", "greetings_api"));
+builder.Services.AddAuthorizationBuilder()
+  .AddPolicy("admin_greetings", policy =>
+        policy
+            .RequireRole("admin")
+            .RequireClaim("scope", "greetings_api"));*/
 
 // 添加授权
 builder.Services.AddAuthorization(options =>
