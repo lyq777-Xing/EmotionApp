@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
-public class ResultJunit
+public class ResultTest
 {
     [TestMethod]
-    public void ResultTest()
+    public void Test()
     {
         // 测试 ResultTool 的成功和失败方法
         var successResult = ResultTool.Success("success");

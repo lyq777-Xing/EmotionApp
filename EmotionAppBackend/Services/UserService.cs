@@ -2,7 +2,7 @@ using EmotionAppBackend.Models;
 
 public class UserService
 {
-    private readonly UserRepository _userRepository; 
+    private readonly UserRepository _userRepository;
 
     public UserService(UserRepository userRepository)
     {
@@ -12,4 +12,7 @@ public class UserService
     public async Task<List<User>> GetUsers() => await _userRepository.GetAllUsers();
 
     public async Task AddUser(User user) => await _userRepository.AddUser(user);
+
+    internal async Task<User> ValidateUser(string email, string password) =>
+        await _userRepository.Login(email, password);
 }

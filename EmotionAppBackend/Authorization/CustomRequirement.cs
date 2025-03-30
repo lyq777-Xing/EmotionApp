@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 
 /**
- * ???????
+ * 
  */
 public class CustomRequirement : IAuthorizationRequirement
 {

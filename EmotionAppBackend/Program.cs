@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using EmotionAppBackend.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -64,24 +65,23 @@ builder.Services.AddSwaggerGen(c =>
 // 注册 MVC 控制器服务，自动扫描所有 Controller（需放在项目中符合约定的 Controller 类）
 builder.Services.AddControllers();
 
+builder.Services.AddScoped<ITokenService, TokenService>();
+
 // 添加数据库服务
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 var serverVersion = new MySqlServerVersion(new Version(8, 0, 40));
 
-builder.Services.AddDbContext<AppDbContext>(
-    dbContextOptions => dbContextOptions
-        .UseMySql(connectionString, serverVersion)
-        // The following three options help with debugging, but should
-        // be changed or removed for production.
-        .LogTo(Console.WriteLine, LogLevel.Information)
-        .EnableSensitiveDataLogging()
-        .EnableDetailedErrors()
+// ✅ 正确注册 AppDbContext
+builder.Services.AddDbContext<EmotionAppContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0, 33)) // 版本替换为你实际的 MySQL 版本
+    )
 );
 
-
 // 依赖注入
-//builder.Services.AddScoped<UserService>();
-
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<UserService>();
 
 var app = builder.Build();
 

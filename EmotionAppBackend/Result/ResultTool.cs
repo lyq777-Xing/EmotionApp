@@ -1,6 +1,7 @@
 ﻿public static class ResultTool
 {
-    public static Dictionary<ResultCode, string> DescriptionsDictionary = EnumHelper.GetDescriptions<ResultCode>();
+    public static Dictionary<ResultCode, string> DescriptionsDictionary =
+        EnumHelper.GetDescriptions<ResultCode>();
 
     public static JsonResult Success()
     {
