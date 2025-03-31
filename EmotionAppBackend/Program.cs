@@ -82,6 +82,8 @@ builder.Services.AddDbContext<EmotionAppContext>(options =>
 // 依赖注入
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<DiaryService>();
+builder.Services.AddScoped<DiaryRepository>();
 
 var app = builder.Build();
 

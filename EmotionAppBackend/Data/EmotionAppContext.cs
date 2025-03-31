@@ -18,6 +18,10 @@ public partial class EmotionAppContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<Diary> Diaries { get; set; }
+    public virtual DbSet<Tag> Tags { get; set; }
+    public virtual DbSet<DiaryCategory> Categories { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         =>
@@ -229,7 +233,24 @@ public partial class EmotionAppContext : DbContext
                             .HasColumnName("role_id");
                     }
                 );
+            entity.HasMany(d => d.Diaries).WithOne(d => d.User).HasForeignKey(d => d.UserID);
         });
+
+        // 配置多对多关系
+        modelBuilder.Entity<Diary>(entity =>
+        {
+            entity
+                .HasMany(d => d.Tags)
+                .WithMany(t => t.Diaries)
+                .UsingEntity<Dictionary<string, object>>(
+                    "DiaryTag",
+                    j => j.HasOne<Tag>().WithMany().HasForeignKey("TagID"),
+                    j => j.HasOne<Diary>().WithMany().HasForeignKey("DiaryID")
+                );
+        });
+
+        // 配置软删除过滤器
+        modelBuilder.Entity<Diary>().HasQueryFilter(d => !d.IsDeleted);
 
         OnModelCreatingPartial(modelBuilder);
     }

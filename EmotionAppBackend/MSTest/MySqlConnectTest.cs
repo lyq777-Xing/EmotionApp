@@ -1,7 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Linq;
+using EmotionAppBackend.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [TestClass]
 public class MathUtilsTests
@@ -11,7 +12,7 @@ public class MathUtilsTests
     {
         try
         {
-            using (var context = new AppDbContext())
+            using (var context = new EmotionAppContext())
             {
                 var users = context.Users.ToList(); // 使用 EF Core 查询所有用户
 

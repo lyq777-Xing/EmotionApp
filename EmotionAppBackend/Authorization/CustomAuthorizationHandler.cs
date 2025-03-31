@@ -1,11 +1,11 @@
-using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+using EmotionAppBackend.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-
+using Microsoft.Extensions.DependencyInjection;
 
 /**
  * 自定义授权处理器
@@ -27,7 +27,8 @@ public class CustomAuthorizationHandler : AuthorizationHandler<CustomRequirement
     public CustomAuthorizationHandler(
         IHttpContextAccessor httpContextAccessor,
         IServiceScopeFactory serviceScopeFactory,
-        UserService userService)
+        UserService userService
+    )
     {
         _httpContextAccessor = httpContextAccessor;
         _serviceScopeFactory = serviceScopeFactory;
@@ -35,8 +36,9 @@ public class CustomAuthorizationHandler : AuthorizationHandler<CustomRequirement
     }
 
     protected override async Task HandleRequirementAsync(
-    AuthorizationHandlerContext context,
-    CustomRequirement requirement)
+        AuthorizationHandlerContext context,
+        CustomRequirement requirement
+    )
     {
         // context.User 是当前请求的用户对象
         // FindFirstValue(ClaimTypes.NameIdentifier) 从 ClaimsPrincipal 中获取用户的标识符（通常是用户的 ID），这通常会被存储为一个声明（Claim）。如果用户没有这个声明，它将返回 null 或空字符串。
@@ -58,11 +60,11 @@ public class CustomAuthorizationHandler : AuthorizationHandler<CustomRequirement
 
         using (var scope = _serviceScopeFactory.CreateScope())
         {
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<EmotionAppContext>();
 
             // 查询数据库，检查用户角色
-            var userRoles = await dbContext.Users
-                .Where(u => u.UserId == userId)
+            var userRoles = await dbContext
+                .Users.Where(u => u.UserId == userId)
                 .Select(u => u.Roles)
                 .FirstOrDefaultAsync();
 
@@ -76,5 +78,4 @@ public class CustomAuthorizationHandler : AuthorizationHandler<CustomRequirement
             }
         }
     }
-
 }
