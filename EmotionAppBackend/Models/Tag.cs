@@ -16,5 +16,7 @@ public class Tag
     public User User { get; set; }
 
     // 多对多关系
+
+    [InverseProperty("Tags")]
     public List<Diary> Diaries { get; set; }
 }

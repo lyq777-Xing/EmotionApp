@@ -243,7 +243,7 @@ public partial class EmotionAppContext : DbContext
                 .HasMany(d => d.Tags)
                 .WithMany(t => t.Diaries)
                 .UsingEntity<Dictionary<string, object>>(
-                    "DiaryTag",
+                    "diary_tag",
                     j => j.HasOne<Tag>().WithMany().HasForeignKey("TagID"),
                     j => j.HasOne<Diary>().WithMany().HasForeignKey("DiaryID")
                 );

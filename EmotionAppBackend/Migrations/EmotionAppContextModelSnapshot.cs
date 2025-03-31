@@ -37,7 +37,8 @@ namespace EmotionAppBackend.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
@@ -53,7 +54,8 @@ namespace EmotionAppBackend.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(255)
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -85,21 +87,6 @@ namespace EmotionAppBackend.Migrations
                     b.HasKey("CategoryID");
 
                     b.ToTable("category");
-                });
-
-            modelBuilder.Entity("DiaryTag", b =>
-                {
-                    b.Property<int>("DiaryID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TagID")
-                        .HasColumnType("int");
-
-                    b.HasKey("DiaryID", "TagID");
-
-                    b.HasIndex("TagID");
-
-                    b.ToTable("DiaryTag");
                 });
 
             modelBuilder.Entity("EmotionAppBackend.Models.Permission", b =>
@@ -350,6 +337,21 @@ namespace EmotionAppBackend.Migrations
                         });
                 });
 
+            modelBuilder.Entity("diary_tag", b =>
+                {
+                    b.Property<int>("DiaryID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagID")
+                        .HasColumnType("int");
+
+                    b.HasKey("DiaryID", "TagID");
+
+                    b.HasIndex("TagID");
+
+                    b.ToTable("diary_tag");
+                });
+
             modelBuilder.Entity("Diary", b =>
                 {
                     b.HasOne("DiaryCategory", "Category")
@@ -367,21 +369,6 @@ namespace EmotionAppBackend.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("DiaryTag", b =>
-                {
-                    b.HasOne("Diary", null)
-                        .WithMany()
-                        .HasForeignKey("DiaryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Tag", null)
-                        .WithMany()
-                        .HasForeignKey("TagID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("EmotionAppBackend.Models.Permission", b =>
@@ -438,6 +425,21 @@ namespace EmotionAppBackend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("user_roles_ibfk_1");
+                });
+
+            modelBuilder.Entity("diary_tag", b =>
+                {
+                    b.HasOne("Diary", null)
+                        .WithMany()
+                        .HasForeignKey("DiaryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tag", null)
+                        .WithMany()
+                        .HasForeignKey("TagID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DiaryCategory", b =>
