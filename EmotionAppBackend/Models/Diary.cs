@@ -26,6 +26,9 @@ public class Diary
     [MaxLength(255)]
     public string Content { get; set; }
 
+    [MaxLength(255)]
+    public string Ai { get; set; }
+
     /// <summary>
     /// 日记创建时间
     /// </summary>
