@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using EmotionAppBackend.Models;
 
 [Table("sentiment_analysis")]
-public class SentimentAnalysis
+public partial class SentimentAnalysis
 {
     [Key]
     public int SentimentAnalysisId { get; set; }

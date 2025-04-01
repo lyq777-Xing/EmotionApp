@@ -49,4 +49,6 @@ public partial class User
     public List<Tag> Tags { get; set; }
 
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+
+    public List<SentimentAnalysis> SentimentAnalysis { get; set; }
 }

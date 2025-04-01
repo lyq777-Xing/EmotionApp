@@ -22,6 +22,8 @@ public partial class EmotionAppContext : DbContext
     public virtual DbSet<Tag> Tags { get; set; }
     public virtual DbSet<DiaryCategory> Categories { get; set; }
 
+    public virtual DbSet<SentimentAnalysis> SentimentAnalys { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         =>
@@ -234,6 +236,10 @@ public partial class EmotionAppContext : DbContext
                     }
                 );
             entity.HasMany(d => d.Diaries).WithOne(d => d.User).HasForeignKey(d => d.UserID);
+            entity
+                .HasMany(d => d.SentimentAnalysis)
+                .WithOne(d => d.User)
+                .HasForeignKey(d => d.UserID);
         });
 
         // 配置多对多关系
@@ -247,6 +253,10 @@ public partial class EmotionAppContext : DbContext
                     j => j.HasOne<Tag>().WithMany().HasForeignKey("TagID"),
                     j => j.HasOne<Diary>().WithMany().HasForeignKey("DiaryID")
                 );
+            entity
+                .HasOne(d => d.SentimentAnalysis)
+                .WithOne(s => s.Diary)
+                .HasForeignKey<SentimentAnalysis>(s => s.DiaryId);
         });
 
         // 配置软删除过滤器
