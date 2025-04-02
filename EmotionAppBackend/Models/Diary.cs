@@ -26,9 +26,6 @@ public class Diary
     [MaxLength(255)]
     public string Content { get; set; }
 
-    [MaxLength(255)]
-    public string Ai { get; set; }
-
     /// <summary>
     /// 日记创建时间
     /// </summary>
@@ -59,8 +56,13 @@ public class Diary
 
     public User User { get; set; }
 
+    // 情感分析
+    public int? SentimentAnalysisID { get; set; }
+
+    public SentimentAnalysis SentimentAnalysis { get; set; }
+
     // 多对多关系
-    public List<Tag> Tags { get; set; }
+    public List<Tag>? Tags { get; set; }
 
     // 日记权限
     public PermissionLevel Permission { get; set; }
