@@ -399,3 +399,9 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /.idea
+.venv
+/Algorithm/f
+/Algorithm/HuggingFace/aclImdb
+/Algorithm/HuggingFace/hf
+/Algorithm/HuggingFace/HuggingFace/saved_model
+/Algorithm/HuggingFace/HuggingFace/results
