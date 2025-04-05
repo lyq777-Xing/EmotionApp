@@ -405,3 +405,4 @@ FodyWeavers.xsd
 /Algorithm/HuggingFace/hf
 /Algorithm/HuggingFace/HuggingFace/saved_model
 /Algorithm/HuggingFace/HuggingFace/results
+/Algorithm/HuggingFace/HuggingFace/emotion_model
