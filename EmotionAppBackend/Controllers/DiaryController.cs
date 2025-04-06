@@ -19,11 +19,4 @@ public class DiaryController : ControllerBase
         var diaries = await _diaryService.GetDiaries();
         return Ok(diaries);
     }
-
-    //[HttpPost]
-    //public async Task<IActionResult> CreateDiary([FromBody] Diary diary)
-    //{
-    //    await _diaryService.AddDiary(diary);
-    //    return CreatedAtAction(nameof(GetDiaries), new { id = diary.DiaryId }, diary);
-    //}
 }
