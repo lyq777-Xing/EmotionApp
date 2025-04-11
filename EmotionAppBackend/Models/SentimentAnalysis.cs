@@ -13,6 +13,9 @@ public partial class SentimentAnalysis
     //情绪分类
     public String Sentiment { get; set; }
 
+    //情绪强度
+    public int EmotionLevel { get; set; } // 如 1~5 代表强度
+
     //情绪强度评分
     public float SentimentScore { get; set; }
 

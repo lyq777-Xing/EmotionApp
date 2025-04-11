@@ -19,10 +19,14 @@ public partial class EmotionAppContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Diary> Diaries { get; set; }
+
     public virtual DbSet<Tag> Tags { get; set; }
+
     public virtual DbSet<DiaryCategory> Categories { get; set; }
 
     public virtual DbSet<SentimentAnalysis> SentimentAnalys { get; set; }
+
+    public DbSet<EmotionKnowledge> EmotionKnowledgeBase { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -261,6 +265,8 @@ public partial class EmotionAppContext : DbContext
 
         // 配置软删除过滤器
         modelBuilder.Entity<Diary>().HasQueryFilter(d => !d.IsDeleted);
+
+        modelBuilder.Entity<EmotionKnowledge>().ToTable("emotion_knowledge_base");
 
         OnModelCreatingPartial(modelBuilder);
     }
