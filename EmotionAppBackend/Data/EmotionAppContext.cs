@@ -257,10 +257,6 @@ public partial class EmotionAppContext : DbContext
                     j => j.HasOne<Tag>().WithMany().HasForeignKey("TagID"),
                     j => j.HasOne<Diary>().WithMany().HasForeignKey("DiaryID")
                 );
-            entity
-                .HasOne(d => d.SentimentAnalysis)
-                .WithOne(s => s.Diary)
-                .HasForeignKey<SentimentAnalysis>(s => s.DiaryId);
         });
 
         // 配置软删除过滤器

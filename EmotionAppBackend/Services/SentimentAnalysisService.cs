@@ -14,4 +14,19 @@ public class SentimentAnalysisService
         // Call the repository to analyze sentiment
         return await _sentimentAnalysisRepository.GetSentimentAnalysisChart(userId);
     }
+
+    public async Task<List<EmotionTrend>> GetSentimentAnalysisChartYear(int userId)
+    {
+        return await _sentimentAnalysisRepository.GetSentimentAnalysisChartYear(userId);
+    }
+
+    public async Task<List<EmotionTrend>> GetSentimentAnalysisChartMonth(int userId)
+    {
+        return await _sentimentAnalysisRepository.GetSentimentAnalysisChartMonth(userId);
+    }
+
+    public async Task<List<EmotionTrend>> GetSentimentAnalysisChartWeek(int userId)
+    {
+        return await _sentimentAnalysisRepository.GetSentimentAnalysisChartWeek(userId);
+    }
 }

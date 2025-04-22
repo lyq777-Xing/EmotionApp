@@ -25,7 +25,7 @@ public partial class SentimentAnalysis
     //运用马斯洛需求理论的分析结果
     public String Maslow { get; set; }
 
-    public DateOnly AnalysisTime { get; set; }
+    public DateTime AnalysisTime { get; set; }
     public int UserID { get; set; }
     public User User { get; set; }
 }

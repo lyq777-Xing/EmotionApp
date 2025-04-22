@@ -12,6 +12,7 @@ public class EmotionKnowledgeController : ControllerBase
         _recommendationService = recommendationService;
     }
 
+    //GET /api/EmotionKnowledge/recommend? category = happiness & intensity = 5 & need = relaxation
     [HttpGet("recommend")]
     public IActionResult GetRecommendation(
         [FromQuery] string category,

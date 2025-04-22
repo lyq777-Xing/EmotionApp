@@ -62,6 +62,18 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Emotion app", Version = "v1" });
 });
 
+// 添加 CORS 服务
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(
+        "AllowLocalhost8081",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:8081").AllowAnyHeader().AllowAnyMethod();
+        }
+    );
+});
+
 // 注册 MVC 控制器服务，自动扫描所有 Controller（需放在项目中符合约定的 Controller 类）
 builder.Services.AddControllers();
 
@@ -99,6 +111,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowLocalhost8081");
 app.UseCors(); // 允许跨域请求
 app.UseAuthentication(); // 使用鉴权服务
 app.UseAuthorization(); // 使用授权服务
