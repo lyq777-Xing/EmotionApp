@@ -90,4 +90,33 @@ public class SentimentAnalysisRepository(EmotionAppContext _dbContext)
             }
         ).ToList();
     }
+
+    public async Task<EmotionDonut> GetSentimentAnalysisChartDonut(int userId)
+    {
+        var oneWeekAgo = DateTime.Now.AddDays(-7); // 当前时间往前推一周
+        var res = await _dbContext
+            .SentimentAnalys.Where(an => (an.UserID == userId && an.AnalysisTime >= oneWeekAgo))
+            .OrderBy(an => an.AnalysisTime) // ✅ 按时间升序排序
+            .Select(an => new
+            {
+                date = an.AnalysisTime.ToString("yyyy-MM-dd"),
+                emotionLevel = an.EmotionLevel,
+            })
+            .ToListAsync();
+        EmotionDonut emotionDonut = new EmotionDonut();
+        emotionDonut.happy = 0;
+        emotionDonut.sad = 0;
+        foreach (var re in res)
+        {
+            if (re.emotionLevel == 0)
+            {
+                emotionDonut.sad++;
+            }
+            else if (re.emotionLevel == 1)
+            {
+                emotionDonut.happy++;
+            }
+        }
+        return emotionDonut;
+    }
 }

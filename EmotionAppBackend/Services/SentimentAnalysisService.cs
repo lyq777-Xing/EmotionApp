@@ -29,4 +29,9 @@ public class SentimentAnalysisService
     {
         return await _sentimentAnalysisRepository.GetSentimentAnalysisChartWeek(userId);
     }
+
+    public async Task<EmotionDonut> GetSentimentAnalysisChartDonut(int userId)
+    {
+        return await _sentimentAnalysisRepository.GetSentimentAnalysisChartDonut(userId);
+    }
 }

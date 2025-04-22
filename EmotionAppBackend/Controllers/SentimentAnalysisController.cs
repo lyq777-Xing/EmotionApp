@@ -49,4 +49,14 @@ public class SentimentAnalysisController : ControllerBase
         var result = await _sentimentAnalysisService.GetSentimentAnalysisChartWeek(userId);
         return Ok(result);
     }
+
+    /**
+     * 获取近一周的情绪正负向分析图
+     */
+    [HttpGet("chart/donut")]
+    public async Task<IActionResult> GetSentimentAnalysisChartDonut(int userId)
+    {
+        var result = await _sentimentAnalysisService.GetSentimentAnalysisChartDonut(userId);
+        return Ok(result);
+    }
 }

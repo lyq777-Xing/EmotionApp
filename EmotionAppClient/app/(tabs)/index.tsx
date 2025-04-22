@@ -1,4 +1,6 @@
-import { Image, StyleSheet, Platform } from "react-native"
+import { Image, StyleSheet, Platform, TouchableOpacity } from "react-native"
+import { Ionicons } from "@expo/vector-icons"
+import { useColorScheme } from "react-native"
 
 import { HelloWave } from "@/components/HelloWave"
 import ParallaxScrollView from "@/components/ParallaxScrollView"
@@ -12,6 +14,13 @@ import { useEffect, useState } from 'react';
 import EmotionTrendChart from "../../components/EmotionTrendChart";
 
 export default function HomeScreen() {
+  const colorScheme = useColorScheme();
+  const [theme, setTheme] = useState<'light' | 'dark'>(colorScheme === 'dark' ? 'dark' : 'light');
+  
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+  
   const [chartData, setChartData] = useState<{
     year: { x: string; y: number }[];
     month: { x: string; y: number }[];
@@ -59,8 +68,6 @@ export default function HomeScreen() {
     return `${date.getMonth() + 1}月`; // 只显示月份
   };
 
-
-
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -70,11 +77,28 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
+      // 设置主题
+      // theme prop removed as it is not supported
+          >
+      <ThemedView style={styles.headerContainer}>
+        <ThemedView style={styles.titleContainer}>
+          <ThemedText type="title">Welcome!</ThemedText>
+          <HelloWave />
+        </ThemedView>
+        
+        <TouchableOpacity 
+          style={styles.themeToggle}
+          onPress={toggleTheme}
+          accessibilityLabel="Toggle theme"
+        >
+          <Ionicons 
+            name={theme === 'light' ? 'moon-outline' : 'sunny-outline'} 
+            size={24} 
+            color={theme === 'light' ? "#000" : "#FFF"} 
+          />
+        </TouchableOpacity>
       </ThemedView>
+      
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="title">情绪趋势图</ThemedText>
         <SafeAreaView style={{ flex: 1 }}>
@@ -87,6 +111,12 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+  },
   titleContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -95,6 +125,7 @@ const styles = StyleSheet.create({
   stepContainer: {
     gap: 8,
     marginBottom: 8,
+    marginTop: 16,
   },
   reactLogo: {
     height: 178,
@@ -102,5 +133,10 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: "absolute",
+  },
+  themeToggle: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.2)",
   },
 })
