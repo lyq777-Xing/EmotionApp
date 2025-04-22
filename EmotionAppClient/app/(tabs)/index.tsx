@@ -1,25 +1,20 @@
 import { Image, StyleSheet, Platform, TouchableOpacity } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
-import { useColorScheme } from "react-native"
 
 import { HelloWave } from "@/components/HelloWave"
 import ParallaxScrollView from "@/components/ParallaxScrollView"
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedView } from "../../components/ThemedView"
 import { SafeAreaView } from "react-native"
-
+import { useTheme } from "../../utils/ThemeContext"
 
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import EmotionTrendChart from "../../components/EmotionTrendChart";
 
 export default function HomeScreen() {
-  const colorScheme = useColorScheme();
-  const [theme, setTheme] = useState<'light' | 'dark'>(colorScheme === 'dark' ? 'dark' : 'light');
-  
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
+  // Use the global theme context instead of local state
+  const { theme, toggleTheme } = useTheme();
   
   const [chartData, setChartData] = useState<{
     year: { x: string; y: number }[];
@@ -70,16 +65,14 @@ export default function HomeScreen() {
 
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
+      headerBackgroundColor={{ light: "#A1CEDC", dark: "#DF49" }}
       headerImage={
         <Image
           source={require("@/assets/images/logo.png")}
           style={styles.reactLogo}
         />
       }
-      // 设置主题
-      // theme prop removed as it is not supported
-          >
+    >
       <ThemedView style={styles.headerContainer}>
         <ThemedView style={styles.titleContainer}>
           <ThemedText type="title">Welcome!</ThemedText>

@@ -68,7 +68,7 @@ const DonutChart: React.FC<DonutChartProps> = ({
       </Svg>
       <View style={styles.centerTextContainer}>
         <Text style={styles.centerText}>{displayValue}</Text>
-        <Text style={styles.centerLabel}>总记录情绪次数</Text>
+        <Text style={styles.centerLabel} >总记录情绪次数</Text>
       </View>
     </View>
   );
