@@ -57,9 +57,9 @@ public class Diary
     public User User { get; set; }
 
     // 情感分析
-    public int? SentimentAnalysisID { get; set; }
+    //public int? SentimentAnalysisID { get; set; }
 
-    public SentimentAnalysis SentimentAnalysis { get; set; }
+    //public SentimentAnalysis SentimentAnalysis { get; set; }
 
     // 多对多关系
     public List<Tag>? Tags { get; set; }

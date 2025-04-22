@@ -84,6 +84,8 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<DiaryService>();
 builder.Services.AddScoped<DiaryRepository>();
+builder.Services.AddScoped<SentimentAnalysisRepository>();
+builder.Services.AddScoped<SentimentAnalysisService>();
 
 var app = builder.Build();
 

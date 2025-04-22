@@ -10,14 +10,20 @@ public partial class SentimentAnalysis
     public int DiaryId { get; set; }
     public Diary Diary { get; set; }
 
-    //情绪分类
+    //情绪分类 消极/积极
     public String Sentiment { get; set; }
 
-    //情绪强度
+    //情绪等级 0/1
     public int EmotionLevel { get; set; } // 如 1~5 代表强度
 
-    //情绪强度评分
+    //情绪强度评分 0-1
     public float SentimentScore { get; set; }
+
+    //运用ABC理论的分析结果
+    public String ABC { get; set; }
+
+    //运用马斯洛需求理论的分析结果
+    public String Maslow { get; set; }
 
     public DateOnly AnalysisTime { get; set; }
     public int UserID { get; set; }
