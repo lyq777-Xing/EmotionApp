@@ -20,7 +20,7 @@ public partial class EmotionAppContext : DbContext
 
     public virtual DbSet<Diary> Diaries { get; set; }
 
-    public virtual DbSet<Tag> Tags { get; set; }
+    //public virtual DbSet<Tag> Tags { get; set; }
 
     public virtual DbSet<DiaryCategory> Categories { get; set; }
 
@@ -247,17 +247,17 @@ public partial class EmotionAppContext : DbContext
         });
 
         // 配置多对多关系
-        modelBuilder.Entity<Diary>(entity =>
-        {
-            entity
-                .HasMany(d => d.Tags)
-                .WithMany(t => t.Diaries)
-                .UsingEntity<Dictionary<string, object>>(
-                    "diary_tag",
-                    j => j.HasOne<Tag>().WithMany().HasForeignKey("TagID"),
-                    j => j.HasOne<Diary>().WithMany().HasForeignKey("DiaryID")
-                );
-        });
+        //modelBuilder.Entity<Diary>(entity =>
+        //{
+        //    entity
+        //        .HasMany(d => d.Tags)
+        //        .WithMany(t => t.Diaries)
+        //        .UsingEntity<Dictionary<string, object>>(
+        //            "diary_tag",
+        //            j => j.HasOne<Tag>().WithMany().HasForeignKey("TagID"),
+        //            j => j.HasOne<Diary>().WithMany().HasForeignKey("DiaryID")
+        //        );
+        //});
 
         // 配置软删除过滤器
         modelBuilder.Entity<Diary>().HasQueryFilter(d => !d.IsDeleted);

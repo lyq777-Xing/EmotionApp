@@ -106,16 +106,15 @@ export default function DiaryScreen() {
     // 在实际应用中，将这些数据传递给日记创建页面
     console.log("日记预设数据:", diaryData);
 
-    // 导航到日记创建页面
+    // 导航到日记创建页面，并传递参数
     router.push({
       pathname: "/diary/create",
       params: {
-        weather: selectedWeather,
-        mood: selectedMood,
-        activities: JSON.stringify(selectedActivities),
+        weather: selectedWeather || "",
+        mood: selectedMood || "",
+        activities: JSON.stringify(selectedActivities || []),
       },
     });
-    // console.log('跳转到创建日记页面');
   };
 
   // 渲染进度条

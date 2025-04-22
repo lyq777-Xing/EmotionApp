@@ -62,7 +62,9 @@ public class Diary
     //public SentimentAnalysis SentimentAnalysis { get; set; }
 
     // 多对多关系
-    public List<Tag>? Tags { get; set; }
+    //public List<Tag>? Tags { get; set; }
+
+    public string Tag { get; set; }
 
     // 日记权限
     public PermissionLevel Permission { get; set; }

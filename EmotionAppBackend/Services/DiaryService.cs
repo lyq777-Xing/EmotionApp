@@ -8,4 +8,9 @@ public class DiaryService
     }
 
     public async Task<List<Diary>> GetDiaries() => await _diaryRepository.GetAllDiaries();
+
+    public async Task AddDiary(Diary diary)
+    {
+        await _diaryRepository.AddDiary(diary);
+    }
 }
