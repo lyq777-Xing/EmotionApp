@@ -1,6 +1,8 @@
 // 热力图组件
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/utils/ThemeContext';
+import { Colors } from '@/constants/Colors';
 
 type HeatmapEntry = {
   date: string;
@@ -14,6 +16,7 @@ type Props = {
 };
 
 const CalendarHeatmap: React.FC<Props> = ({ data, getColor, valueLabel }) => {
+  const { theme } = useTheme();
   const today = new Date();
   const last30Days = Array.from({ length: 30 }, (_, i) => {
     const d = new Date(today);
@@ -50,7 +53,14 @@ const CalendarHeatmap: React.FC<Props> = ({ data, getColor, valueLabel }) => {
           />
         ))}
       </View>
-      {valueLabel && <Text style={styles.labelHint}>单位：{valueLabel}</Text>}
+      {valueLabel && (
+        <Text style={[
+          styles.labelHint,
+          { color: theme === 'dark' ? Colors.dark.icon : Colors.light.icon }
+        ]}>
+          单位：{valueLabel}
+        </Text>
+      )}
     </View>
   );
 };
@@ -74,7 +84,6 @@ const styles = StyleSheet.create({
   labelHint: {
     marginTop: 6,
     fontSize: 12,
-    color: '#666',
   },
 });
 
