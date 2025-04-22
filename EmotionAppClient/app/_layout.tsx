@@ -10,6 +10,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ThemeProvider } from '@/utils/ThemeContext';
+import { fixTouchEventPassive } from '@/utils/touchEvents';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -25,6 +26,12 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  // Fix touch event passive listener issues in web
+  useEffect(() => {
+    const cleanupTouchEvents = fixTouchEventPassive();
+    return cleanupTouchEvents;
+  }, []);
 
   if (!loaded) {
     return null;

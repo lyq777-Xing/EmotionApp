@@ -122,13 +122,13 @@ const EmotionTrendChart: React.FC<EmotionTrendChartProps> = ({ data }) => {
         }}
       >
         <Button onPress={() => setTimeFrame("year")} action="secondary">
-          按年
+          <ButtonText>按年</ButtonText>
         </Button>
         <Button onPress={() => setTimeFrame("month")} action="secondary">
-          按月
+          <ButtonText>按月</ButtonText>
         </Button>
         <Button onPress={() => setTimeFrame("week")} action="secondary">
-          按周
+          <ButtonText>按周</ButtonText>
         </Button>
       </View>
     </View>
