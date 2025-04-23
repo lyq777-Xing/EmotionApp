@@ -10,15 +10,19 @@ public class EmotionRecommendationService
         _context = context;
     }
 
-    public List<EmotionKnowledge> GetRecommendations(string category, int intensity, string need)
+    public List<EmotionKnowledge> GetRecommendations(string category, double intensity)
     {
-        return _context
+        var recommendations = _context
             .EmotionKnowledgeBase.Where(e =>
-                e.EmotionCategory == category
-                && e.EmotionIntensity >= intensity
-                && e.TargetNeeds == need
+                e.EmotionCategory == category && e.EmotionIntensity >= intensity
             )
-            .Take(3) // 限制返回数量
+            //.Select(e => new EmotionKnowledge
+            //{
+            //    EmotionCategory = e.EmotionCategory ?? "愉快", // Replace NULL with a default value
+            //    EmotionIntensity = e.EmotionIntensity ?? 0.0, // Replace NULL with a default value
+            //})
+            .Take(3) // Limit the results
             .ToList();
+        return recommendations;
     }
 }

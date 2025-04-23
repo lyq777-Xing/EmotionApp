@@ -101,6 +101,7 @@ builder.Services.AddScoped<DiaryService>();
 builder.Services.AddScoped<DiaryRepository>();
 builder.Services.AddScoped<SentimentAnalysisRepository>();
 builder.Services.AddScoped<SentimentAnalysisService>();
+builder.Services.AddScoped<EmotionRecommendationService>();
 
 var app = builder.Build();
 
