@@ -16,11 +16,10 @@ public class EmotionKnowledgeController : ControllerBase
     [HttpGet("recommend")]
     public IActionResult GetRecommendation(
         [FromQuery] string category,
-        [FromQuery] int intensity,
-        [FromQuery] string need
+        [FromQuery] double intensity
     )
     {
-        var result = _recommendationService.GetRecommendations(category, intensity, need);
+        var result = _recommendationService.GetRecommendations(category, intensity);
         return Ok(result);
     }
 }
