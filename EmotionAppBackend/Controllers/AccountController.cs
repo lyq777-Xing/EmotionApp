@@ -1,24 +1,28 @@
 ﻿using System.Security.Claims;
+using EmotionAppBackend.Models;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
-[Route("api/account")]  // 添加路由属性
-[ApiController]         // 添加API控制器属性
-public class LoginController : ControllerBase
+[Route("api/account")] // 添加路由属性
+[ApiController] // 添加API控制器属性
+public class AccountController : ControllerBase
 {
     private readonly UserService _userService;
     private readonly IConfiguration _configuration;
     private readonly ITokenService _tokenService;
+    private readonly RoleService _roleService;
 
-    public LoginController(
+    public AccountController(
         UserService userService,
         IConfiguration configuration,
-        ITokenService tokenService
+        ITokenService tokenService,
+        RoleService roleService
     )
     {
         _userService = userService;
         _configuration = configuration;
         _tokenService = tokenService;
+        _roleService = roleService;
     }
 
     [HttpPost("login")]
@@ -33,7 +37,6 @@ public class LoginController : ControllerBase
 
         // 输出用户角色信息进行调试
         Console.WriteLine($"User roles: {string.Join(", ", user.Roles.Select(r => r.RoleName))}");
-
 
         // 2. 创建ClaimsPrincipal（用户身份声明）
         var claims = new List<Claim>
@@ -53,5 +56,32 @@ public class LoginController : ControllerBase
         // 4. 返回 Token 或其他需要的内容
         return Ok(new { Token = token });
         //return (IActionResult)ResultTool.Success(token);
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] User user)
+    {
+        //验证用户的信息
+        var getByEmail = _userService.GetUserByEmail(user.Email);
+        if (getByEmail.Result != null)
+        {
+            return BadRequest("该邮箱已被注册");
+        }
+        try
+        {
+            //user.Password = user.Password.Md5String();
+            //user.CreatedAt = DateTime.Now;
+
+            //设置默认角色
+            var role = await _roleService.GetRoleByName("user");
+            user.Roles = new List<Role> { role };
+
+            await _userService.AddUser(user);
+            return Ok("注册成功");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest("注册失败");
+        }
     }
 }

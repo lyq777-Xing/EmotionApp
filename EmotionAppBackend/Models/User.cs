@@ -44,11 +44,11 @@ public partial class User
     public DateTime? UpdatedAt { get; set; }
 
     // 日记集合
-    public List<Diary> Diaries { get; set; }
+    public List<Diary>? Diaries { get; set; }
 
     //public List<Tag> Tags { get; set; }
 
     public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
 
-    public List<SentimentAnalysis> SentimentAnalysis { get; set; }
+    public List<SentimentAnalysis>? SentimentAnalysis { get; set; }
 }
