@@ -1,4 +1,4 @@
-using EmotionAppBackend.Models;
+﻿using EmotionAppBackend.Models;
 using Microsoft.EntityFrameworkCore;
 
 public class UserRepository(EmotionAppContext _context)
@@ -19,9 +19,11 @@ public class UserRepository(EmotionAppContext _context)
     internal async Task<User?> Login(string email, string password)
     {
         var pwdMd5 = password.Md5String();
-        var user = await _context.Users.FirstOrDefaultAsync(u =>
-            u.Email == email && u.Password == pwdMd5
-        );
+        var user = await _context
+            .Users
+            //查询角色
+            .Include(u => u.Roles)
+            .FirstOrDefaultAsync(u => u.Email == email && u.Password == pwdMd5);
         return user;
     }
 }

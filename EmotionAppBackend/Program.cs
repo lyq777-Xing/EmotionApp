@@ -2,6 +2,7 @@
 using System.Text;
 using EmotionAppBackend.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -43,11 +44,17 @@ builder.Services.AddAuthorizationBuilder()
             .RequireRole("admin")
             .RequireClaim("scope", "greetings_api"));*/
 
-// 添加授权
+
+// Register IHttpContextAccessor
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IAuthorizationHandler, CustomAuthorizationHandler>();
+
+//添加授权
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("UserOnly", policy => policy.RequireRole("User"));
+    options.AddPolicy("UserOnly", policy => policy.RequireRole("user"));
 });
 
 // Add services to the container.
@@ -115,12 +122,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowLocalhost8081");
-app.UseCors(); // 允许跨域请求
-app.UseAuthentication(); // 使用鉴权服务
-app.UseAuthorization(); // 使用授权服务
-
 app.UseHttpsRedirection();
+
+// 正确的中间件顺序
+app.UseCors("AllowLocalhost8081"); // 只使用一次CORS中间件，使用配置好的策略
+app.UseAuthentication(); // 身份验证中间件
+app.UseAuthorization(); // 授权中间件
 
 // 使用 MapControllers()，让框架自动根据控制器上的 [Route] 属性配置路由
 app.MapControllers();

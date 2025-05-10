@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 [ApiController]
 public class ProtectedController : ControllerBase
 {
-    [Authorize]
+    [Authorize(Roles = "user")]
+    //[Authorize(Policy = "UserOnly")]
     [HttpGet("user")]
     public IActionResult GetUserContent()
     {

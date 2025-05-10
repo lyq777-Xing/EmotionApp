@@ -4,12 +4,13 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AOpenApiConstants_002Ecs_002Fl_003AC_0021_003FUsers_003Flyq_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Ff42ccc977ee32a2a89eab8dbb018b9fe2d8dd0f9bb2da46986823ba63393a5_003FOpenApiConstants_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AOpenApiEndpointRouteBuilderExtensions_002Ecs_002Fl_003AC_0021_003FUsers_003Flyq_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fcb89aa36653facf3c76dc46203ea9076e985f8e30c3ea33be6ddcd1f11cbd_003FOpenApiEndpointRouteBuilderExtensions_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003AServerSession_002Ecs_002Fl_003AC_0021_003FUsers_003Flyq_003FAppData_003FRoaming_003FJetBrains_003FRider2024_002E3_003Fresharper_002Dhost_003FSourcesCache_003Fa54af938a2dc2bcc438ee1b0f67d1f8719f14f2b9011248f5a0852edbf6e4f2_003FServerSession_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1de47116_002D5882_002D4139_002D8a32_002D3860b8d530ae/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="MysqlTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1de47116_002D5882_002D4139_002D8a32_002D3860b8d530ae/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MysqlTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4::net9.0::MathUtilsTests.MysqlTest&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;MSTest::6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4::net9.0::LoginTest.LoginTask&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=207eaeba_002Da0df_002D4891_002D8d01_002D0293e8377c18/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="MysqlTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=207eaeba_002Da0df_002D4891_002D8d01_002D0293e8377c18/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="MysqlTest #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;MSTest::6F2ABEC9-B1A1-42F9-9083-B6F59FC464E4::net9.0::MathUtilsTests.MysqlTest&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
