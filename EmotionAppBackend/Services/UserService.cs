@@ -30,4 +30,9 @@ public class UserService
      */
     public async Task<User?> GetUserByEmail(String email) =>
         await _userRepository.GetUserByEmail(email);
+
+    /**
+     * 根据用户id查询用户信息
+     */
+    public async Task<User?> GetUserById(int userId) => await _userRepository.GetUserById(userId);
 }

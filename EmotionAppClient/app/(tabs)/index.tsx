@@ -16,6 +16,8 @@ import EmotionTrendChart from "../../components/EmotionTrendChart";
 import type { EmotionChartItem } from "../../utils/apiService";
 import { getEmotionChart } from "../../utils/apiService";
 
+import { useAuth } from "@/utils/AuthContext";
+
 export default function HomeScreen() {
   // Use the global theme context instead of local state
   const { theme, toggleTheme } = useTheme();
@@ -30,13 +32,22 @@ export default function HomeScreen() {
     week: []
   });
 
+  const { user } = useAuth();
+
   useEffect(() => {
     const fetchChartData = async () => {
       try {
+        if (!user) {
+          console.error("用户信息未找到");
+          return;
+        }
+
+        console.log("Fetching chart data for user:", user);
+        
         const [yearRes, monthRes, weekRes] = await Promise.all([
-          getEmotionChart('year'),
-          getEmotionChart('month'),
-          getEmotionChart('week'),
+          getEmotionChart('year',user.userId),
+          getEmotionChart('month',user.userId),
+          getEmotionChart('week',user.userId),
         ]);
 
         // 将后端返回的数据格式转换为 { x, y } 结构
@@ -57,7 +68,7 @@ export default function HomeScreen() {
     };
 
     fetchChartData();
-  }, []);
+  }, [user]);
 
   // 日期字符串 -> 图表展示用 label
   const formatDateLabel = (dateStr: string) => {

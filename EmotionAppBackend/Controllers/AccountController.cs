@@ -25,6 +25,9 @@ public class AccountController : ControllerBase
         _roleService = roleService;
     }
 
+    /**
+     * 登录
+     */
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
     {
@@ -58,6 +61,9 @@ public class AccountController : ControllerBase
         //return (IActionResult)ResultTool.Success(token);
     }
 
+    /**
+     * 注册
+     */
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] User user)
     {
@@ -83,5 +89,33 @@ public class AccountController : ControllerBase
         {
             return BadRequest("注册失败");
         }
+    }
+
+    /**
+     * 获取当前用户信息
+     */
+    [HttpGet("current")]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        // 获取当前用户的 ID
+        var userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (userIdString == null)
+        {
+            return Unauthorized("User not authenticated.");
+        }
+
+        // 将字符串 userId 转换为整数
+        if (!int.TryParse(userIdString, out var userId))
+        {
+            return BadRequest("Invalid user ID format.");
+        }
+
+        // 根据 ID 获取用户信息
+        var user = await _userService.GetUserById(userId);
+        if (user == null)
+        {
+            return NotFound("User not found.");
+        }
+        return Ok(user);
     }
 }
