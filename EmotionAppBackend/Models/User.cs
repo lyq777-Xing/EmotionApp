@@ -24,6 +24,11 @@ public partial class User
     public string Password { get; set; } = null!;
 
     /// <summary>
+    /// 用户头像
+    /// </summary>
+    public string? Img { get; set; }
+
+    /// <summary>
     /// 用户邮箱，唯一标识用户
     /// </summary>
     public string? Email { get; set; }

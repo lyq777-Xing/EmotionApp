@@ -180,6 +180,11 @@ public partial class EmotionAppContext : DbContext
                 .HasColumnType("timestamp")
                 .HasColumnName("created_at");
             entity
+                .Property(e => e.Img)
+                .HasComment("用户头像")
+                .HasMaxLength(255)
+                .HasColumnName("img");
+            entity
                 .Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasComment("用户邮箱，唯一标识用户")

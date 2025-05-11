@@ -71,6 +71,7 @@ export interface User {
   phone?: string;
   createdAt?: string;
   updatedAt?: string;
+  img?: string;
 }
 
 // 图表数据项接口
