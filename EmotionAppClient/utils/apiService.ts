@@ -68,7 +68,7 @@ interface AuthResponse {
 export const login = async (credentials: LoginRequest): Promise<boolean> => {
   try {
     const response = await apiClient.post<AuthResponse>('/account/login', credentials);
-    
+    console.log('Login response:', response.data);
     if (response.data && response.data.token) {
       // Store token in AsyncStorage
       await AsyncStorage.setItem('auth_token', response.data.token);
