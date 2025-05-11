@@ -17,7 +17,7 @@ export default function DiaryCreateScreen() {
   
   // 添加对话框状态
   const [modalVisible, setModalVisible] = useState(false);
-  const [emotionResult, setEmotionResult] = useState('');
+  const [emotionResult, setEmotionResult] = useState<{ emotion: string; intensity: number; content: string } | null>(null);
   
   // Add refs to focus inputs
   const titleInputRef = useRef<TextInput>(null);
@@ -60,6 +60,58 @@ export default function DiaryCreateScreen() {
     
     return moodMap[mood] || '心情未知';
   };
+
+  // 获取天气选项的标签文本
+  const getWeatherLabel = (weatherId: string) => {
+    const weatherMap: {[key: string]: {label: string, icon: string}} = {
+      'sunny': {label: '晴朗', icon: 'sunny-outline'},
+      'partly-cloudy': {label: '多云', icon: 'partly-sunny-outline'},
+      'cloudy': {label: '阴天', icon: 'cloud-outline'},
+      'rainy': {label: '下雨', icon: 'rainy-outline'},
+      'stormy': {label: '雷雨', icon: 'thunderstorm-outline'},
+      'snowy': {label: '下雪', icon: 'snow-outline'}
+    };
+    
+    return weatherId && weatherMap[weatherId] ? 
+      { label: weatherMap[weatherId].label, icon: weatherMap[weatherId].icon } : 
+      null;
+  };
+  
+  // 获取心情选项的标签文本
+  const getMoodLabel = (moodId: string) => {
+    const moodMap: {[key: string]: {label: string, emoji: string}} = {
+      'happy': {label: '开心', emoji: '😊'},
+      'excited': {label: '兴奋', emoji: '🤩'},
+      'calm': {label: '平静', emoji: '😌'},
+      'tired': {label: '疲惫', emoji: '😴'},
+      'sad': {label: '难过', emoji: '😢'},
+      'angry': {label: '生气', emoji: '😡'}
+    };
+    
+    return moodId && moodMap[moodId] ? 
+      { label: moodMap[moodId].label, emoji: moodMap[moodId].emoji } : 
+      null;
+  };
+  
+  // 获取活动选项的标签文本
+  const getActivityLabels = (activityIds: string[]) => {
+    const activityMap: {[key: string]: {label: string, icon: string}} = {
+      'work': {label: '工作', icon: 'briefcase-outline'},
+      'study': {label: '学习', icon: 'book-outline'},
+      'exercise': {label: '运动', icon: 'fitness-outline'},
+      'social': {label: '社交', icon: 'people-outline'},
+      'entertainment': {label: '娱乐', icon: 'game-controller-outline'},
+      'rest': {label: '休息', icon: 'bed-outline'}
+    };
+    
+    return activityIds.map(id => 
+      activityMap[id] ? { id, ...activityMap[id] } : null
+    ).filter(Boolean);
+  };
+  
+  const weatherInfo = getWeatherLabel(weather);
+  const moodInfo = getMoodLabel(mood);
+  const activityInfoList = getActivityLabels(activities);
   
   // 处理日记保存
   const handleSave = async () => {
@@ -75,6 +127,7 @@ export default function DiaryCreateScreen() {
     // 构建发送到后端的数据对象
     const diaryData = {
       categoryId: 666,  // 默认值
+      userId: 1978, // 默认值
       tag,
       title,
       content,
@@ -85,13 +138,13 @@ export default function DiaryCreateScreen() {
     
     try {
       // 这里添加API调用逻辑，向后端发送日记数据
-      // const response = await fetch('YOUR_API_ENDPOINT', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify(diaryData),
-      // });
+      const response = await fetch('http://localhost:5081/api/diary/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(diaryData),
+      });
       
       // 显示对话框，询问是否需要进行情绪分析
       setModalVisible(true);
@@ -111,24 +164,39 @@ export default function DiaryCreateScreen() {
   const handleEmotionAnalysis = async () => {
     try {
       // 这里添加情绪分析的API调用
-      // const response = await fetch('YOUR_EMOTION_ANALYSIS_API', {
+      // const response = await fetch('http://43.163.197.54:5000/emotion/analyze', {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json',
       //   },
       //   body: JSON.stringify({ content }),
       // });
-      // 
+      
       // const result = await response.json();
       // setEmotionResult(result);
+
+      // 模拟情绪分析结果 - 注意 emotion 应该是 0/1 而不是 happy/sad
+      const res = {
+        "emotion": "1", // 1表示积极情绪，0表示消极情绪
+        "intensity": 0.8,
+        "content": content
+      };
       
       // 这里模拟情绪分析结果
-      setEmotionResult('积极情绪: 60%, 消极情绪: 10%, 中性情绪: 30%');
+      setEmotionResult(res);
       
       // 关闭当前对话框，显示情绪分析结果
       setModalVisible(false);
+      
+      // 正确传递参数到分析页面
       router.push({
-        pathname: '/(tabs)/Donut',
+        pathname: '/diary/analysis',
+        params: {
+          emotion: res.emotion,     // 直接传递 emotion 值
+          intensity: res.intensity, // 直接传递 intensity 值
+          content: content,         // 传递日记内容用于进一步分析
+          title: title              // 传递标题
+        }
       });
     } catch (error) {
       console.error('情绪分析出错:', error);
@@ -184,6 +252,86 @@ export default function DiaryCreateScreen() {
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
         >
+          {/* 添加标签显示区域 */}
+          {(weatherInfo || moodInfo || activityInfoList.length > 0) && (
+            <View style={[
+              styles.tagsContainer,
+              { backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
+            ]}>
+              <Text style={[
+                styles.tagsTitle,
+                { color: isDark ? Colors.dark.text : Colors.light.text }
+              ]}>
+                今日标签:
+              </Text>
+              
+              <View style={styles.tagsList}>
+                {weatherInfo && (
+                  <View style={[
+                    styles.tagItem,
+                    { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(10,126,164,0.1)' }
+                  ]}>
+                    <Ionicons 
+                      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                      name={weatherInfo.icon as any} 
+                      size={16} 
+                      color={isDark ? Colors.dark.tint : Colors.light.tint}
+                      style={styles.tagIcon} 
+                    />
+                    <Text style={[
+                      styles.tagText,
+                      { color: isDark ? Colors.dark.text : Colors.light.text }
+                    ]}>
+                      {weatherInfo.label}
+                    </Text>
+                  </View>
+                )}
+                
+                {moodInfo && (
+                  <View style={[
+                    styles.tagItem,
+                    { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(10,126,164,0.1)' }
+                  ]}>
+                    <Text style={styles.tagEmoji}>{moodInfo.emoji}</Text>
+                    <Text style={[
+                      styles.tagText,
+                      { color: isDark ? Colors.dark.text : Colors.light.text }
+                    ]}>
+                      {moodInfo.label}
+                    </Text>
+                  </View>
+                )}
+                
+                {activityInfoList.map((activity, index) => (
+                  activity && (
+                    <View 
+                      key={`activity-${// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+index}`}
+                      style={[
+                        styles.tagItem,
+                        { backgroundColor: isDark ? 'rgba(255,255,255,0.15)' : 'rgba(10,126,164,0.1)' }
+                      ]}
+                    >
+                      <Ionicons 
+                        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                        name={activity.icon as any} 
+                        size={16} 
+                        color={isDark ? Colors.dark.tint : Colors.light.tint}
+                        style={styles.tagIcon} 
+                      />
+                      <Text style={[
+                        styles.tagText,
+                        { color: isDark ? Colors.dark.text : Colors.light.text }
+                      ]}>
+                        {activity.label}
+                      </Text>
+                    </View>
+                  )
+                ))}
+              </View>
+            </View>
+          )}
+          
           <TouchableWithoutFeedback onPress={() => titleInputRef.current?.focus()}>
             <View style={styles.inputContainer}>
               <TextInput
@@ -395,5 +543,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     width: '45%',
-  }
+  },
+  // 标签区域样式
+  tagsContainer: {
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+  },
+  tagsTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  tagsList: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  tagItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  tagIcon: {
+    marginRight: 4,
+  },
+  tagText: {
+    fontSize: 14,
+  },
+  tagEmoji: {
+    fontSize: 14,
+    marginRight: 4,
+  },
 });

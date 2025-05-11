@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, ScrollView } from 'react-native';
 import DonutChart from '../../components/EmotionDonutChart';
 import axios from 'axios';
 import CalendarHeatmap from "../../components/EmotionHeatmap";
 import { useTheme } from '../../utils/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DonutScreen() {
     const { theme } = useTheme();
@@ -74,55 +76,88 @@ export default function DonutScreen() {
     };
 
     return (
-        <View style={[styles.container, isDark && styles.containerDark]}>
-            <View style={styles.header}>
-                <Text style={[styles.headerTitle, isDark && styles.textDark]}>情绪分析</Text>
-                <View style={styles.emojiContainer}>
-                    <Text style={styles.emoji}>{getEmoji()}</Text>
+        <SafeAreaView style={[styles.safeArea, { backgroundColor: isDark ? '#1c1c1c' : '#f5f7fa' }]}>
+            <ScrollView 
+                style={[styles.scrollView, { backgroundColor: isDark ? '#1c1c1c' : '#f5f7fa' }]} 
+                contentContainerStyle={styles.scrollViewContent}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={styles.header}>
+                    <Text style={[styles.headerTitle, isDark && styles.textDark]}>情绪分析</Text>
+                    <View style={styles.emojiContainer}>
+                        <Text style={styles.emoji}>{getEmoji()}</Text>
+                    </View>
                 </View>
-            </View>
-            
-            <View style={[styles.chartContainer, isDark && styles.chartContainerDark]}>
-                <Text style={[styles.title, isDark && styles.textDark]}>近七天情绪分布图</Text>
-                {loading ? (
-                    <ActivityIndicator size="large" color={isDark ? "#7EB6FF" : "#007AFF"} style={styles.loader} />
-                ) : Object.keys(emotionData).length > 0 ? (
-                    <>
-                        <DonutChart data={emotionData} />
-                        <View style={[styles.card, isDark && styles.cardDark]}>
-                            <Ionicons 
-                                name="bulb-outline" 
-                                size={24} 
-                                color={isDark ? "#FFD700" : "#FF9500"} 
-                                style={styles.suggestionIcon}
-                            />
-                            <Text style={[styles.suggestion, isDark && styles.textDark]}>{getSuggestion()}</Text>
-                        </View>
-                    </>
-                ) : (
-                    <Text style={[styles.noData, isDark && styles.textDark]}>暂无数据</Text>
-                )}
-            </View>
+                
+                <View style={[styles.chartContainer, isDark && styles.chartContainerDark]}>
+                    <Text style={[styles.title, isDark && styles.textDark]}>近七天情绪分布图</Text>
+                    {loading ? (
+                        <ActivityIndicator size="large" color={isDark ? "#7EB6FF" : "#007AFF"} style={styles.loader} />
+                    ) : Object.keys(emotionData).length > 0 ? (
+                        <>
+                            <DonutChart data={emotionData} />
+                            <View style={[styles.card, isDark && styles.cardDark]}>
+                                <Ionicons 
+                                    name="bulb-outline" 
+                                    size={24} 
+                                    color={isDark ? "#FFD700" : "#FF9500"} 
+                                    style={styles.suggestionIcon}
+                                />
+                                <Text style={[styles.suggestion, isDark && styles.textDark]}>{getSuggestion()}</Text>
+                            </View>
+                        </>
+                    ) : (
+                        <Text style={[styles.noData, isDark && styles.textDark]}>暂无数据</Text>
+                    )}
+                </View>
 
-            <View style={[styles.heatmapContainer, isDark && styles.chartContainerDark]}>
-                <Text style={[styles.title, isDark && styles.textDark]}>近30天情绪强度</Text>
-                <CalendarHeatmap
-                    data={heatmapData}
-                    valueLabel="强度"
-                    getColor={getIntensityColor}
-                />
-            </View>
-        </View>
+                <View style={[styles.heatmapContainer, isDark && styles.chartContainerDark]}>
+                    <Text style={[styles.title, isDark && styles.textDark]}>近30天情绪强度</Text>
+                    <CalendarHeatmap
+                        data={heatmapData}
+                        valueLabel="强度"
+                        getColor={getIntensityColor}
+                    />
+                </View>
+
+                {/* 添加情绪目标设定按钮 */}
+                <View style={styles.goalButtonContainer}>
+                    <TouchableOpacity 
+                        style={[
+                            styles.goalButton, 
+                            { backgroundColor: isDark ? '#3a7bbf' : '#007AFF' }
+                        ]}
+                        onPress={() => router.push('/emotion-goals')}
+                    >
+                        <Ionicons 
+                            name="flag-outline" 
+                            size={20} 
+                            color="#fff"
+                            style={styles.goalButtonIcon} 
+                        />
+                        <Text style={styles.goalButtonText}>
+                            设定情绪目标
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                
+                {/* 添加底部内边距，确保按钮完全可见 */}
+                <View style={styles.bottomPadding} />
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    safeArea: {
         flex: 1,
-        paddingTop: 40,
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollViewContent: {
         paddingHorizontal: 20,
         alignItems: 'center',
-        backgroundColor: '#f5f7fa',
     },
     containerDark: {
         backgroundColor: '#1c1c1c',
@@ -203,5 +238,29 @@ const styles = StyleSheet.create({
         marginTop: 15,
         width: '100%',
         alignItems: 'center',
+    },
+    goalButtonContainer: {
+        marginTop: 20,
+        alignItems: 'center',
+        width: '100%',
+    },
+    goalButton: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 25,
+    },
+    goalButtonIcon: {
+        marginRight: 10,
+    },
+    goalButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    bottomPadding: {
+        height: 20,
     },
 });

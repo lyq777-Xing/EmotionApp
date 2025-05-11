@@ -173,7 +173,7 @@ export default function DiaryScreen() {
               onPress={() => setSelectedWeather(option.id)}
             >
               <Ionicons
-                name={option.icon as any}
+                name={option.icon as keyof typeof Ionicons.glyphMap}
                 size={32}
                 color={
                   selectedWeather === option.id
@@ -289,6 +289,7 @@ export default function DiaryScreen() {
               onPress={() => toggleActivity(option.id)}
             >
               <Ionicons
+                // biome-ignore lint/suspicious/noExplicitAny: <explanation>
                 name={option.icon as any}
                 size={32}
                 color={

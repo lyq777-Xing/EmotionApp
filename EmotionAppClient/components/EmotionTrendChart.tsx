@@ -1,5 +1,6 @@
 // EmotionTrendChart.tsx
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { View, Text } from "react-native";
 import { Platform } from "react-native";
 import { useTheme } from "@/utils/ThemeContext";
@@ -45,7 +46,7 @@ const EmotionTrendChart: React.FC<EmotionTrendChartProps> = ({ data }) => {
         <VictoryAxis
           tickFormat={(x: string, index: number, ticks: string[]) => {
             const date = new Date(x);
-            if (isNaN(date.getTime())) return x;
+            if (Number.isNaN(date.getTime())) return x;
 
             if (timeFrame === "month" || timeFrame === "year") {
               const currentMonth = date.getMonth() + 1;

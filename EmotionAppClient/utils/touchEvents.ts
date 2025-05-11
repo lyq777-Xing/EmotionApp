@@ -11,18 +11,22 @@
 export function fixTouchEventPassive() {
   if (typeof document !== 'undefined' && typeof window !== 'undefined') {
     // Only run this in web environments
-    const options = {
+    const options: AddEventListenerOptions = {
       passive: false,
     };
     
+    // Use empty functions for the listeners
+    const touchStartListener = () => {};
+    const touchMoveListener = () => {};
+    
     // Add non-passive event listeners for touchstart and touchmove
-    document.addEventListener('touchstart', () => {}, options);
-    document.addEventListener('touchmove', () => {}, options);
+    document.addEventListener('touchstart', touchStartListener, options);
+    document.addEventListener('touchmove', touchMoveListener, options);
     
     // Clean up these listeners when they're no longer needed
     return () => {
-      document.removeEventListener('touchstart', () => {}, options);
-      document.removeEventListener('touchmove', () => {}, options);
+      document.removeEventListener('touchstart', touchStartListener, options);
+      document.removeEventListener('touchmove', touchMoveListener, options);
     };
   }
   

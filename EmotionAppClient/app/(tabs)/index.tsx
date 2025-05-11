@@ -59,7 +59,7 @@ export default function HomeScreen() {
   // 日期字符串 -> 图表展示用 label
   const formatDateLabel = (dateStr: string) => {
     const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return dateStr;
+    if (Number.isNaN(date.getTime())) return dateStr;
     return `${date.getMonth() + 1}月`; // 只显示月份
   };
 
