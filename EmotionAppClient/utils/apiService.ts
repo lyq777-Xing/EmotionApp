@@ -62,6 +62,12 @@ interface AuthResponse {
   token: string;
 }
 
+// 图表数据项接口
+export interface EmotionChartItem {
+  date: string;
+  intensity: number;
+}
+
 /**
  * Login user with email and password
  */
@@ -117,6 +123,23 @@ export const isAuthenticated = async (): Promise<boolean> => {
     return false;
   }
 };
+
+/**
+ * Get emotion data Chart
+ */
+export const getEmotionChart = async (content: string): Promise<EmotionChartItem[]> => {
+  try {
+    const response = await apiClient.get(`/analysis/chart/${content}?userId=1978`);
+    console.log(`Emotion chart ${content} response:`, response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch emotion list:', error);
+    throw error;
+  }
+};
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
 
 /**
  * Analyze emotion from text content

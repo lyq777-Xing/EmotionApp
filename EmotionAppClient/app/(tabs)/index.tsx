@@ -12,6 +12,10 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import EmotionTrendChart from "../../components/EmotionTrendChart";
 
+// Import the EmotionTrendChart component
+import type { EmotionChartItem } from "../../utils/apiService";
+import { getEmotionChart } from "../../utils/apiService";
+
 export default function HomeScreen() {
   // Use the global theme context instead of local state
   const { theme, toggleTheme } = useTheme();
@@ -29,24 +33,23 @@ export default function HomeScreen() {
   useEffect(() => {
     const fetchChartData = async () => {
       try {
-        const userId = 1978; // 或从用户状态中获取
         const [yearRes, monthRes, weekRes] = await Promise.all([
-          axios.get(`http://localhost:5081/api/analysis/chart/year?userId=${userId}`),
-          axios.get(`http://localhost:5081/api/analysis/chart/month?userId=${userId}`),
-          axios.get(`http://localhost:5081/api/analysis/chart/week?userId=${userId}`)
+          getEmotionChart('year'),
+          getEmotionChart('month'),
+          getEmotionChart('week'),
         ]);
 
         // 将后端返回的数据格式转换为 { x, y } 结构
-        const convert = (list: { date: string, intensity: number }[]) =>
+        const convert = (list: EmotionChartItem[]) =>
           list.map(item => ({
             x: item.date,
             y: item.intensity
           }));
 
         setChartData({
-          year: convert(yearRes.data),
-          month: convert(monthRes.data),
-          week: convert(weekRes.data),
+          year: convert(yearRes),
+          month: convert(monthRes),
+          week: convert(weekRes),
         });
       } catch (error) {
         console.error("获取情绪图表数据失败：", error);

@@ -40,18 +40,6 @@ export default function LoginScreen() {
       if (success) {
         console.log("Login success:", success);
         router.replace('/(tabs)');
-        // // 使用Promise包装Alert
-        // await new Promise((resolve) => {
-        //   Alert.alert("成功", "登录成功", [
-        //     {
-        //       text: "确定",
-        //       onPress: () => {
-        //         resolve(true);
-        //         router.replace("/(tabs)");
-        //       },
-        //     },
-        //   ]);
-        // });
       } else {
         Alert.alert("错误", "登录失败，请检查您的凭据");
       }
