@@ -51,7 +51,7 @@ const MenuItem = ({
     activeOpacity={0.7}
   >
     <View style={styles.menuItemLeft}>
-      {/* <View style={[
+      <View style={[
         styles.iconContainer, 
         { backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
       ]}>
@@ -60,7 +60,7 @@ const MenuItem = ({
           name={icon} 
           color={isDark ? Colors.dark.tint : Colors.light.tint} 
         />
-      </View> */}
+      </View>
       <ThemedText style={styles.menuItemText}>{title}</ThemedText>
     </View>
     <IconSymbol
@@ -105,7 +105,7 @@ export default function UserScreen() {
       id: "diary-list",
       title: "查看日记",
       icon: "book.fill",
-      onPress: () => router.push("/diary-list"),
+      onPress: () => router.push("/diary/list"),
     },
     {
       id: "emotion-square",
