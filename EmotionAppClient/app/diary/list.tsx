@@ -25,14 +25,21 @@ const ANIMATION_DURATION = 300;
 
 // Diary entry interface
 interface DiaryEntry {
-  id: number;
+  diaryID: number;
   title: string;
   content: string;
-  emotion: string;
-  intensity: number;
-  tags: string[];
+  sentiment: string | null;
+  sentimentScore: number | null;
+  tag: string;
   createdAt: string;
-  updatedAt?: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  isDeleted: boolean;
+  categoryID: number;
+  category: any | null;
+  userID: number;
+  user: any | null;
+  permission: number;
 }
 
 // Emotion tag component
@@ -47,6 +54,7 @@ const EmotionTag = ({ tag, isDark }: { tag: string, isDark: boolean }) => {
       'surprised': { bg: isDark ? '#78350f' : '#fef3c7', text: isDark ? '#fcd34d' : '#92400e' },
       'neutral': { bg: isDark ? '#1f2937' : '#f3f4f6', text: isDark ? '#9ca3af' : '#4b5563' },
       'anxiety': { bg: isDark ? '#5b21b6' : '#ede9fe', text: isDark ? '#c4b5fd' : '#7c3aed' },
+      'excited': { bg: isDark ? '#065f46' : '#d1fae5', text: isDark ? '#34d399' : '#047857' },
       'relaxed': { bg: isDark ? '#065f46' : '#d1fae5', text: isDark ? '#34d399' : '#047857' },
     };
     return tagColors[tag.toLowerCase()] || { bg: isDark ? '#1f2937' : '#f3f4f6', text: isDark ? '#9ca3af' : '#4b5563' };
@@ -87,8 +95,10 @@ export default function DiaryListScreen() {
   const animatedValues = useRef<{[key: string]: {fade: Animated.Value, translate: Animated.Value}}>({}).current;
   
   // 初始化或获取动画值
-  const getAnimatedValues = (id: number, index: number) => {
-    const key = id.toString();
+  const getAnimatedValues = (id: number | undefined, index: number) => {
+    // 添加安全检查，确保id有值
+    const key = id !== undefined ? id.toString() : `item-${index}-${Math.random()}`;
+    
     if (!animatedValues[key]) {
       animatedValues[key] = {
         fade: new Animated.Value(0),
@@ -124,10 +134,11 @@ export default function DiaryListScreen() {
       const response = await apiClient.get<DiaryEntry[]>(
         user ? `/diary/list?userId=${user.userId}` : '/diary/list'
       );
+      // 处理数据
       setDiaries(response.data);
     } catch (error) {
       console.error('Error fetching diaries:', error);
-      setDiaries(sampleDiaries);
+      // setDiaries();
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -167,16 +178,23 @@ export default function DiaryListScreen() {
   const handleDiaryPress = (diary: DiaryEntry) => {
     router.push({
       pathname: '/diary/detail',
-      params: { id: diary.id }
+      params: { id: diary.diaryID }
     });
   };
 
   const handleCreateDiary = () => {
-    router.push('/diary/create');
+    router.push('/(tabs)/diary');
   };
 
   const renderDiaryItem = ({ item, index }: { item: DiaryEntry, index: number }) => {
-    const { fade, translate } = getAnimatedValues(item.id, index);
+    const { fade, translate } = getAnimatedValues(item.diaryID, index);
+    
+    // 解析标签字符串为数组
+    const tags = item.tag ? item.tag.split(',') : [];
+    // 获取情感类型（如果sentiment为null，使用标签中的第一个作为情绪类型）
+    const emotion = item.sentiment || (tags.length > 0 ? tags[0] : '');
+    // 获取情感强度（如果sentimentScore为null，使用默认值0.5）
+    const intensity = item.sentimentScore !== null ? item.sentimentScore : 0.5;
 
     return (
       <Animated.View
@@ -190,11 +208,11 @@ export default function DiaryListScreen() {
             styles.diaryItem,
             {
               backgroundColor: isDark ? Colors.dark.cardBackground : Colors.light.cardBackground,
-              borderLeftColor: item.emotion === 'happy' ? '#34d399' :
-                              item.emotion === 'sad' ? '#93c5fd' :
-                              item.emotion === 'angry' ? '#f87171' :
-                              item.emotion === 'anxiety' ? '#c4b5fd' :
-                              item.emotion === 'relaxed' ? '#34d399' :
+              borderLeftColor: emotion === 'happy' || emotion === 'excited' ? '#34d399' :
+                              emotion === 'sad' ? '#93c5fd' :
+                              emotion === 'angry' ? '#f87171' :
+                              emotion === 'anxiety' ? '#c4b5fd' :
+                              emotion === 'relaxed' || emotion === 'sunny' ? '#34d399' :
                               isDark ? Colors.dark.tint : Colors.light.tint,
             }
           ]}
@@ -216,16 +234,16 @@ export default function DiaryListScreen() {
               <View style={styles.emotionIndicator}>
                 <IconSymbol 
                   size={16} 
-                  name={item.intensity > 0.6 ? "heart.fill" : "heart"} 
+                  name={intensity > 0.6 ? "heart.fill" : "heart"} 
                   color={
-                    item.emotion === 'happy' ? '#34d399' :
-                    item.emotion === 'sad' ? '#93c5fd' :
-                    item.emotion === 'angry' ? '#f87171' : 
+                    emotion === 'happy' || emotion === 'excited' ? '#34d399' :
+                    emotion === 'sad' ? '#93c5fd' :
+                    emotion === 'angry' ? '#f87171' : 
                     isDark ? Colors.dark.text : Colors.light.text
                   } 
                 />
                 <ThemedText style={styles.intensityText}>
-                  {Math.round(item.intensity * 100)}%
+                  {Math.round(intensity * 100)}%
                 </ThemedText>
               </View>
             </View>
@@ -239,10 +257,10 @@ export default function DiaryListScreen() {
             </ThemedText>
             
             <View style={styles.tagsContainer}>
-              {item.emotion && (
-                <EmotionTag tag={item.emotion} isDark={isDark} />
+              {emotion && (
+                <EmotionTag tag={emotion} isDark={isDark} />
               )}
-              {item.tags && item.tags.map((tag, index) => (
+              {tags.filter(tag => tag !== emotion).map((tag, index) => (
                 <EmotionTag key={index} tag={tag} isDark={isDark} />
               ))}
             </View>
@@ -372,7 +390,7 @@ export default function DiaryListScreen() {
           <FlatList
             data={diaries}
             renderItem={renderDiaryItem}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => (item?.id ? item.id.toString() : Math.random().toString())}
             contentContainerStyle={styles.listContainer}
             showsVerticalScrollIndicator={false}
             refreshControl={
@@ -391,44 +409,44 @@ export default function DiaryListScreen() {
   );
 }
 
-const sampleDiaries: DiaryEntry[] = [
-  {
-    id: 1,
-    title: '今天是个好日子',
-    content: '今天天气很好，心情也不错。早上去了公园跑步，遇到了很多同样热爱运动的人。中午和朋友一起吃饭，聊了很多有趣的事情。下午工作效率很高，完成了很多任务。',
-    emotion: 'happy',
-    intensity: 0.85,
-    tags: ['运动', '朋友'],
-    createdAt: '2023-05-10T08:30:00Z',
-  },
-  {
-    id: 2,
-    title: '工作压力很大',
-    content: '这周工作任务太多，感觉有点喘不过气。项目截止日期临近，还有很多细节需要处理。希望能尽快调整好状态，高效完成工作。',
-    emotion: 'anxiety',
-    intensity: 0.7,
-    tags: ['工作', '压力'],
-    createdAt: '2023-05-08T18:15:00Z',
-  },
-  {
-    id: 3,
-    title: '与家人的争执',
-    content: '今天和家人因为一些小事发生了争执，感到很沮丧。或许我们都太疲惫了，没能好好沟通。明天要记得道歉，好好谈一谈。',
-    emotion: 'sad',
-    intensity: 0.6,
-    tags: ['家庭', '沟通'],
-    createdAt: '2023-05-05T21:45:00Z',
-  },
-  {
-    id: 4,
-    title: '假日放松时光',
-    content: '周末在家看了很久想看的电影，做了美食，还打扫了房间。这种自己安排时间的感觉真好，期待下个假期再做一些有意义的事情。',
-    emotion: 'relaxed',
-    intensity: 0.9,
-    tags: ['休闲', '电影'],
-    createdAt: '2023-05-01T14:20:00Z',
-  },
-];
+// const sampleDiaries: DiaryEntry[] = [
+//   {
+//     id: 1,
+//     title: '今天是个好日子',
+//     content: '今天天气很好，心情也不错。早上去了公园跑步，遇到了很多同样热爱运动的人。中午和朋友一起吃饭，聊了很多有趣的事情。下午工作效率很高，完成了很多任务。',
+//     emotion: 'happy',
+//     intensity: 0.85,
+//     tags: ['运动', '朋友'],
+//     createdAt: '2023-05-10T08:30:00Z',
+//   },
+//   {
+//     id: 2,
+//     title: '工作压力很大',
+//     content: '这周工作任务太多，感觉有点喘不过气。项目截止日期临近，还有很多细节需要处理。希望能尽快调整好状态，高效完成工作。',
+//     emotion: 'anxiety',
+//     intensity: 0.7,
+//     tags: ['工作', '压力'],
+//     createdAt: '2023-05-08T18:15:00Z',
+//   },
+//   {
+//     id: 3,
+//     title: '与家人的争执',
+//     content: '今天和家人因为一些小事发生了争执，感到很沮丧。或许我们都太疲惫了，没能好好沟通。明天要记得道歉，好好谈一谈。',
+//     emotion: 'sad',
+//     intensity: 0.6,
+//     tags: ['家庭', '沟通'],
+//     createdAt: '2023-05-05T21:45:00Z',
+//   },
+//   {
+//     id: 4,
+//     title: '假日放松时光',
+//     content: '周末在家看了很久想看的电影，做了美食，还打扫了房间。这种自己安排时间的感觉真好，期待下个假期再做一些有意义的事情。',
+//     emotion: 'relaxed',
+//     intensity: 0.9,
+//     tags: ['休闲', '电影'],
+//     createdAt: '2023-05-01T14:20:00Z',
+//   },
+// ];
 
 const styles = StyleSheet.create({
   container: {

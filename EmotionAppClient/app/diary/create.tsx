@@ -9,7 +9,14 @@ import { Colors } from '@/constants/Colors';
 
 import { useLocalSearchParams } from 'expo-router';
 
+import { useAuth } from "@/utils/AuthContext"
+
+
 export default function DiaryCreateScreen() {
+
+  // 获取用户信息
+  const { user } = useAuth()
+
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const [title, setTitle] = useState('');
@@ -127,7 +134,7 @@ export default function DiaryCreateScreen() {
     // 构建发送到后端的数据对象
     const diaryData = {
       categoryId: 666,  // 默认值
-      userId: 1978, // 默认值
+      userId: user?.userId ?? -1, // 默认值
       tag,
       title,
       content,
