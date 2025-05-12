@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("api/diary")]
@@ -23,14 +23,17 @@ public class DiaryController : ControllerBase
         return Ok(diaries);
     }
 
+    /**
+     * ????
+     */
     [HttpPost("add")]
-    public async Task<IActionResult> AddDiary([FromBody] DiaryDto diaryDto)
+    public async Task<IActionResult> AddDiary([FromBody] Diary diary)
     {
-        if (diaryDto == null)
+        if (diary == null)
         {
             return BadRequest("Diary cannot be null");
         }
-        if (string.IsNullOrEmpty(diaryDto.title) || string.IsNullOrEmpty(diaryDto.content))
+        if (string.IsNullOrEmpty(diary.Title) || string.IsNullOrEmpty(diary.Content))
         {
             return BadRequest("Title and Content are required");
         }
@@ -46,17 +49,25 @@ public class DiaryController : ControllerBase
 
         //}
 
-        var diary = new Diary
-        {
-            Title = diaryDto.title,
-            Content = diaryDto.content,
-            CreatedAt = DateTime.Now,
-            CategoryID = diaryDto.categoryId,
-            UserID = diaryDto.userId,
-            Tag = diaryDto.tag,
-            //Tags = tags.Select(t => new Tag { Name = t, Type = 0, UserID = diaryDto.userId }).ToList()
-        };
         await _diaryService.AddDiary(diary);
         return CreatedAtAction(nameof(GetDiaries), new { id = diary.DiaryID }, diary);
+    }
+
+    /**
+     * 根据用户ID获取日记
+     */
+    [HttpGet("list")]
+    public async Task<IActionResult> GetDiariesByUserId(int userId)
+    {
+        if (userId <= 0)
+        {
+            return BadRequest("Invalid user ID");
+        }
+        var diaries = await _diaryService.GetDiariesByUserId(userId);
+        if (diaries == null || !diaries.Any())
+        {
+            return NotFound("No diaries found for this user");
+        }
+        return Ok(diaries);
     }
 }

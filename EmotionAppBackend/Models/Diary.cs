@@ -49,12 +49,12 @@ public class Diary
     // 分类与属性
     public int CategoryID { get; set; }
 
-    public DiaryCategory Category { get; set; }
+    public DiaryCategory? Category { get; set; } // Fixed '?' character to use nullable reference type syntax.
 
     // 用户
     public int UserID { get; set; }
 
-    public User User { get; set; }
+    public User? User { get; set; } // Fixed '?' character to use nullable reference type syntax.
 
     // 情感分析
     //public int? SentimentAnalysisID { get; set; }

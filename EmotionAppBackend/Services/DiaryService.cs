@@ -13,4 +13,7 @@ public class DiaryService
     {
         await _diaryRepository.AddDiary(diary);
     }
+
+    public async Task<List<DiaryDto>> GetDiariesByUserId(int userId) =>
+        await _diaryRepository.GetDiariesByUserId(userId);
 }
