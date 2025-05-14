@@ -63,11 +63,7 @@ cd EmotionAppBackend
 
 ### 4. 模型服务部署
 
-```bash
-cd model_server
-pip install -r requirements.txt
-python app.py
-```
+
 
 ------
 
