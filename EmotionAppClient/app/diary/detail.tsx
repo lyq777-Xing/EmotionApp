@@ -31,7 +31,7 @@ interface DiaryEntry {
   deletedAt: string | null;
   isDeleted: boolean;
   categoryID: number;
-  category: string | null;
+  category: { id: number; name: string }[] | null;
   userID: number;
   user: string | null;
   tag: string;

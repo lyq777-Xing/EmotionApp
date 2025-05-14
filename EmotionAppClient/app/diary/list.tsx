@@ -36,9 +36,9 @@ interface DiaryEntry {
   deletedAt: string | null;
   isDeleted: boolean;
   categoryID: number;
-  category: any | null;
+  category: { id: number; name: string }[] | null; // Replace with the actual structure of the category object
   userID: number;
-  user: any | null;
+  user: string | null;
   permission: number;
 }
 
@@ -167,10 +167,10 @@ export default function DiaryListScreen() {
     translateY.setValue(0);
     
     // 重置所有动画值
-    Object.keys(animatedValues).forEach(key => {
+    for (const key of Object.keys(animatedValues)) {
       animatedValues[key].fade.setValue(0);
       animatedValues[key].translate.setValue(20);
-    });
+    }
     
     fetchDiaries();
   };
@@ -207,7 +207,7 @@ export default function DiaryListScreen() {
           style={[
             styles.diaryItem,
             {
-              backgroundColor: isDark ? Colors.dark.cardBackground : Colors.light.cardBackground,
+              backgroundColor: isDark ? Colors.dark.background : Colors.light.background,
               borderLeftColor: emotion === 'happy' || emotion === 'excited' ? '#34d399' :
                               emotion === 'sad' ? '#93c5fd' :
                               emotion === 'angry' ? '#f87171' :
@@ -261,7 +261,7 @@ export default function DiaryListScreen() {
                 <EmotionTag tag={emotion} isDark={isDark} />
               )}
               {tags.filter(tag => tag !== emotion).map((tag, index) => (
-                <EmotionTag key={index} tag={tag} isDark={isDark} />
+                <EmotionTag key={tag} tag={tag} isDark={isDark} />
               ))}
             </View>
           </View>
@@ -390,7 +390,7 @@ export default function DiaryListScreen() {
           <FlatList
             data={diaries}
             renderItem={renderDiaryItem}
-            keyExtractor={(item) => (item?.id ? item.id.toString() : Math.random().toString())}
+            keyExtractor={(item) => item.diaryID.toString()}
             contentContainerStyle={styles.listContainer}
             showsVerticalScrollIndicator={false}
             refreshControl={

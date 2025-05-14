@@ -155,7 +155,7 @@ const EmotionTrendChart: React.FC<EmotionTrendChartProps> = ({ data }) => {
           action="secondary"
           style={{
             backgroundColor: timeFrame === "year" 
-              ? (appTheme === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)") 
+              ? (appTheme === "dark" ? "rgb(255, 255, 255)" : "rgba(0, 0, 0, 0.1)") 
               : undefined
           }}
         >
@@ -166,7 +166,7 @@ const EmotionTrendChart: React.FC<EmotionTrendChartProps> = ({ data }) => {
           action="secondary"
           style={{
             backgroundColor: timeFrame === "month" 
-              ? (appTheme === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)") 
+              ? (appTheme === "dark" ? "rgb(255, 255, 255)" : "rgba(0, 0, 0, 0.1)") 
               : undefined
           }}
         >
@@ -177,7 +177,7 @@ const EmotionTrendChart: React.FC<EmotionTrendChartProps> = ({ data }) => {
           action="secondary"
           style={{
             backgroundColor: timeFrame === "week" 
-              ? (appTheme === "dark" ? "rgba(255, 255, 255, 0.15)" : "rgba(0, 0, 0, 0.1)") 
+              ? (appTheme === "dark" ? "rgb(255, 255, 255)" : "rgba(0, 0, 0, 0.1)") 
               : undefined
           }}
         >

@@ -81,6 +81,21 @@ export interface EmotionChartItem {
 }
 
 /**
+ * Interface for emotion knowledge item
+ */
+export interface EmotionKnowledge {
+  id: number;
+  emotionCategory: string; // "0" for negative, "1" for positive
+  emotionIntensity: number;
+  recommendedAction: string;
+  psychologicalBasis: string;
+  contentType: string;
+  contentUrl: string | null;
+  targetNeeds: string;
+  description: string;
+}
+
+/**
  * Login user with email and password
  */
 export const login = async (credentials: LoginRequest): Promise<boolean> => {
@@ -190,6 +205,20 @@ export const getEmotionChart = async (
     return response.data;
   } catch (error) {
     console.error("Failed to fetch emotion list:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get emotion knowledge list
+ */
+export const getEmotionKnowledgeList = async (): Promise<EmotionKnowledge[]> => {
+  try {
+    const response = await apiClient.get('/EmotionKnowledge/list');
+    console.log('Emotion knowledge response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch emotion knowledge list:', error);
     throw error;
   }
 };

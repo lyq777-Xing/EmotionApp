@@ -31,7 +31,7 @@ type AnalysisResponse = {
 
 type KnowledgeRecommendation = {
   id: number;
-  emotionCategory: string;
+  emotionCategory: number;
   emotionIntensity: number;
   recommendedAction: string;
   psychologicalBasis: string;
@@ -428,7 +428,7 @@ export default function DiaryAnalysisScreen() {
                         isDark && styles.textDark,
                       ]}
                     >
-                      {rec.emotionCategory}
+                      {rec.emotionCategory === 1 ? "积极" : "消极"}
                     </Text>
                     <View
                       style={[
@@ -490,7 +490,7 @@ export default function DiaryAnalysisScreen() {
                         color={isDark ? "#e0e0e0" : "#666"}
                         style={styles.contentTypeIcon}
                       />
-                      {" " + rec.contentType}
+                      {` ${rec.contentType}`}
                     </Text>
 
                     {rec.contentUrl && (
@@ -700,6 +700,9 @@ const styles = StyleSheet.create({
   textDark: {
     color: "#e0e0e0",
   },
+  textSubtle: {
+    color: "#a0a0a0", // Example subtle color for dark mode
+  },
   recommendationCard: {
     backgroundColor: "#fff",
     borderRadius: 12,
@@ -710,6 +713,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
+  },
+  cardTitleContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16, // Added to match original resultTitle margin
+  },
+  cardIcon: {
+    marginRight: 8, // Added for spacing
   },
   recommendationItem: {
     marginBottom: 12,
