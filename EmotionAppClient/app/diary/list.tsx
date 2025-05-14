@@ -409,45 +409,6 @@ export default function DiaryListScreen() {
   );
 }
 
-// const sampleDiaries: DiaryEntry[] = [
-//   {
-//     id: 1,
-//     title: '今天是个好日子',
-//     content: '今天天气很好，心情也不错。早上去了公园跑步，遇到了很多同样热爱运动的人。中午和朋友一起吃饭，聊了很多有趣的事情。下午工作效率很高，完成了很多任务。',
-//     emotion: 'happy',
-//     intensity: 0.85,
-//     tags: ['运动', '朋友'],
-//     createdAt: '2023-05-10T08:30:00Z',
-//   },
-//   {
-//     id: 2,
-//     title: '工作压力很大',
-//     content: '这周工作任务太多，感觉有点喘不过气。项目截止日期临近，还有很多细节需要处理。希望能尽快调整好状态，高效完成工作。',
-//     emotion: 'anxiety',
-//     intensity: 0.7,
-//     tags: ['工作', '压力'],
-//     createdAt: '2023-05-08T18:15:00Z',
-//   },
-//   {
-//     id: 3,
-//     title: '与家人的争执',
-//     content: '今天和家人因为一些小事发生了争执，感到很沮丧。或许我们都太疲惫了，没能好好沟通。明天要记得道歉，好好谈一谈。',
-//     emotion: 'sad',
-//     intensity: 0.6,
-//     tags: ['家庭', '沟通'],
-//     createdAt: '2023-05-05T21:45:00Z',
-//   },
-//   {
-//     id: 4,
-//     title: '假日放松时光',
-//     content: '周末在家看了很久想看的电影，做了美食，还打扫了房间。这种自己安排时间的感觉真好，期待下个假期再做一些有意义的事情。',
-//     emotion: 'relaxed',
-//     intensity: 0.9,
-//     tags: ['休闲', '电影'],
-//     createdAt: '2023-05-01T14:20:00Z',
-//   },
-// ];
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

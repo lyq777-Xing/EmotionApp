@@ -19,14 +19,24 @@ import { apiClient } from '@/utils/apiService';
 
 // Diary entry interface 
 interface DiaryEntry {
-  id: number;
+  sentiment: string | null;
+  sentimentScore: number | null;
+  abc: string | null;
+  maslow: string | null;
+  diaryID: number;
   title: string;
   content: string;
-  emotion: string;
-  intensity: number;
-  tags: string[];
   createdAt: string;
-  updatedAt?: string;
+  updatedAt: string | null;
+  deletedAt: string | null;
+  isDeleted: boolean;
+  categoryID: number;
+  category: string | null;
+  userID: number;
+  user: string | null;
+  tag: string;
+  permission: number;
+  tags?: string[];
 }
 
 // Emotion colors mapping
@@ -98,14 +108,24 @@ export default function DiaryDetailScreen() {
         setLoading(true);
         if (id) {
           const response = await apiClient.get<DiaryEntry>(`/diary/detail/${id}`);
-          setDiary(response.data);
+          // Convert tag string to array for compatibility with existing EmotionTag component
+          const diaryData: DiaryEntry = {
+            ...response.data,
+            tags: response.data.tag ? response.data.tag.split(',') : []
+          };
+          setDiary(diaryData);
         }
       } catch (error) {
         console.error('Error fetching diary details:', error);
         // If API fails, use sample data matching the ID
-        const sampleDiary = sampleDiaries.find(d => d.id === Number(id));
-        if (sampleDiary) {
-          setDiary(sampleDiary);
+        const sampleDiaryData = sampleDiaries.find(d => d.diaryID === Number(id));
+        if (sampleDiaryData) {
+          // Convert tag string to array for compatibility
+          const formattedSampleDiary: DiaryEntry = {
+            ...sampleDiaryData,
+            tags: sampleDiaryData.tag ? sampleDiaryData.tag.split(',') : []
+          };
+          setDiary(formattedSampleDiary);
         } else {
           // Navigate back if diary not found
           router.back();
@@ -123,7 +143,7 @@ export default function DiaryDetailScreen() {
     if (diary) {
       router.push({
         pathname: '/diary/analysis',
-        params: { id: diary.id.toString() }
+        params: { id: diary.diaryID.toString() }
       });
     }
   };
@@ -134,7 +154,7 @@ export default function DiaryDetailScreen() {
       try {
         await Share.share({
           title: diary.title,
-          message: `${diary.title}\n\n${diary.content}\n\n情绪: ${diary.emotion} (${Math.round(diary.intensity * 100)}%)\n\n#EmotionApp`
+          message: `${diary.title}\n\n${diary.content}\n\n标签: ${diary.tag}\n\n#EmotionApp`
         });
       } catch (error) {
         console.error('Error sharing diary:', error);
@@ -152,7 +172,7 @@ export default function DiaryDetailScreen() {
     if (diary) {
       router.push({
         pathname: '/diary/create',
-        params: { id: diary.id.toString() }
+        params: { id: diary.diaryID.toString() }
       });
     }
   };
@@ -270,24 +290,24 @@ export default function DiaryDetailScreen() {
               <IconSymbol 
                 size={20} 
                 name="heart.fill" 
-                color={getEmotionColor(diary.emotion)} 
+                color={getEmotionColor(diary.sentiment || '')} 
               />
               <ThemedText 
                 style={[
                   styles.emotionText, 
-                  { color: getEmotionColor(diary.emotion) }
+                  { color: getEmotionColor(diary.sentiment || '') }
                 ]}
               >
-                {diary.emotion}
+                {diary.sentiment}
               </ThemedText>
               <View
                 style={[
                   styles.intensityBadge,
-                  { backgroundColor: getEmotionColor(diary.emotion) }
+                  { backgroundColor: getEmotionColor(diary.sentiment || '') }
                 ]}
               >
                 <ThemedText style={styles.intensityText}>
-                  {Math.round(diary.intensity * 100)}%
+                  {Math.round((diary.sentimentScore || 0) * 100)}%
                 </ThemedText>
               </View>
             </View>
@@ -295,8 +315,9 @@ export default function DiaryDetailScreen() {
 
           {/* Tags */}
           <View style={styles.tagsContainer}>
-            {diary.tags && diary.tags.map((tag, index) => (
-              <EmotionTag key={index} tag={tag} isDark={isDark} />
+            {/* Ensure diary.tags is an array before mapping */}
+            {diary.tags?.map((tag, index) => (
+              <EmotionTag key={`${tag.trim()}-${index}-tag`} tag={tag.trim()} isDark={isDark} />
             ))}
           </View>
 
@@ -352,40 +373,80 @@ export default function DiaryDetailScreen() {
 // Sample diaries for fallback when API fails
 const sampleDiaries: DiaryEntry[] = [
   {
-    id: 1,
+    diaryID: 1,
     title: '今天是个好日子',
     content: '今天天气很好，心情也不错。早上去了公园跑步，遇到了很多同样热爱运动的人。中午和朋友一起吃饭，聊了很多有趣的事情。下午工作效率很高，完成了很多任务。\n\n我感觉自己的能量非常充足，希望这种状态能够持续下去。明天也要保持积极的心态，努力工作和生活。',
-    emotion: 'happy',
-    intensity: 0.85,
-    tags: ['运动', '朋友'],
+    tag: '运动,朋友',
     createdAt: '2023-05-10T08:30:00Z',
+    sentiment: 'happy',
+    sentimentScore: 0.85,
+    abc: null,
+    maslow: null,
+    updatedAt: null,
+    deletedAt: null,
+    isDeleted: false,
+    categoryID: 1,
+    category: null,
+    userID: 1,
+    user: null,
+    permission: 0,
   },
   {
-    id: 2,
+    diaryID: 2,
     title: '工作压力很大',
     content: '这周工作任务太多，感觉有点喘不过气。项目截止日期临近，还有很多细节需要处理。希望能尽快调整好状态，高效完成工作。\n\n今天开了三个会议，处理了二十多封邮件，还要准备明天的演示文稿。感觉时间不够用，还有很多任务没完成。需要调整一下工作计划，合理安排时间，避免过度疲劳。',
-    emotion: 'anxiety',
-    intensity: 0.7,
-    tags: ['工作', '压力'],
+    tag: '工作,压力',
     createdAt: '2023-05-08T18:15:00Z',
+    sentiment: 'anxiety',
+    sentimentScore: 0.7,
+    abc: null,
+    maslow: null,
+    updatedAt: null,
+    deletedAt: null,
+    isDeleted: false,
+    categoryID: 1,
+    category: null,
+    userID: 1,
+    user: null,
+    permission: 0,
   },
   {
-    id: 3,
+    diaryID: 3,
     title: '与家人的争执',
     content: '今天和家人因为一些小事发生了争执，感到很沮丧。或许我们都太疲惫了，没能好好沟通。明天要记得道歉，好好谈一谈。\n\n回想起来，我说话的语气可能有些不耐烦，这让家人感到不被尊重。我应该学会控制自己的情绪，即使在疲惫的时候也要保持耐心。家人是最重要的，不应该让工作压力影响家庭和谐。',
-    emotion: 'sad',
-    intensity: 0.6,
-    tags: ['家庭', '沟通'],
+    tag: '家庭,沟通',
     createdAt: '2023-05-05T21:45:00Z',
+    sentiment: 'sad',
+    sentimentScore: 0.6,
+    abc: null,
+    maslow: null,
+    updatedAt: null,
+    deletedAt: null,
+    isDeleted: false,
+    categoryID: 1,
+    category: null,
+    userID: 1,
+    user: null,
+    permission: 0,
   },
   {
-    id: 4,
+    diaryID: 4,
     title: '假日放松时光',
     content: '周末在家看了很久想看的电影，做了美食，还打扫了房间。这种自己安排时间的感觉真好，期待下个假期再做一些有意义的事情。\n\n做了肉酱意面和沙拉，味道比预期的要好。下午看了两部电影，一部喜剧一部纪录片，都很有启发。晚上打了视频电话给远方的朋友，聊了近况。这样平静而充实的一天真是太棒了。',
-    emotion: 'relaxed',
-    intensity: 0.9,
-    tags: ['休闲', '电影'],
+    tag: '休闲,电影',
     createdAt: '2023-05-01T14:20:00Z',
+    sentiment: 'relaxed',
+    sentimentScore: 0.9,
+    abc: null,
+    maslow: null,
+    updatedAt: null,
+    deletedAt: null,
+    isDeleted: false,
+    categoryID: 1,
+    category: null,
+    userID: 1,
+    user: null,
+    permission: 0,
   },
 ];
 
