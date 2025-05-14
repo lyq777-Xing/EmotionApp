@@ -47,7 +47,7 @@ public class Diary
     public bool IsDeleted { get; set; } = false;
 
     // 分类与属性
-    public int CategoryID { get; set; }
+    public int? CategoryID { get; set; }
 
     public DiaryCategory? Category { get; set; } // Fixed '?' character to use nullable reference type syntax.
 
@@ -64,7 +64,7 @@ public class Diary
     // 多对多关系
     //public List<Tag>? Tags { get; set; }
 
-    public string Tag { get; set; }
+    public string? Tag { get; set; }
 
     // 日记权限
     public PermissionLevel Permission { get; set; }

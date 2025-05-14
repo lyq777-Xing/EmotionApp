@@ -5,9 +5,15 @@ public class EmotionRecommendationService
 {
     private readonly EmotionAppContext _context;
 
-    public EmotionRecommendationService(EmotionAppContext context)
+    private readonly EmotionKnowledgeRepository _emotionKnowledgeRepository;
+
+    public EmotionRecommendationService(
+        EmotionAppContext context,
+        EmotionKnowledgeRepository emotionKnowledgeRepository
+    )
     {
         _context = context;
+        _emotionKnowledgeRepository = emotionKnowledgeRepository;
     }
 
     public List<EmotionKnowledge> GetRecommendations(string category, double intensity)
@@ -25,4 +31,10 @@ public class EmotionRecommendationService
             .ToList();
         return recommendations;
     }
+
+    /**
+     * 查询所有知识库内容
+     */
+    public async Task<List<EmotionKnowledge>> GetAllKnowledge() =>
+        await _emotionKnowledgeRepository.GetAllKnowledge();
 }

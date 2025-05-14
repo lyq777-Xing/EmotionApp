@@ -22,4 +22,14 @@ public class EmotionKnowledgeController : ControllerBase
         var result = _recommendationService.GetRecommendations(category, intensity);
         return Ok(result);
     }
+
+    /**
+     * 获取所有知识库内容
+     */
+    [HttpGet("list")]
+    public async Task<IActionResult> GetList()
+    {
+        var result = await _recommendationService.GetAllKnowledge();
+        return Ok(result);
+    }
 }

@@ -109,6 +109,7 @@ builder.Services.AddScoped<DiaryRepository>();
 builder.Services.AddScoped<SentimentAnalysisRepository>();
 builder.Services.AddScoped<SentimentAnalysisService>();
 builder.Services.AddScoped<EmotionRecommendationService>();
+builder.Services.AddScoped<EmotionKnowledgeRepository>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<RoleRepository>();
 
