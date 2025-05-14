@@ -37,18 +37,6 @@ public class DiaryController : ControllerBase
         {
             return BadRequest("Title and Content are required");
         }
-
-        //var tags = diaryDto.tag.Split(",");
-        //foreach (var tag in tags)
-        //{
-        //    Tag t = new Tag();
-        //    t.Name = tag;
-        //    t.Type = 0;
-        //    t.UserID = diaryDto.userId;
-        //    await _tagService.AddTag(t);
-
-        //}
-
         await _diaryService.AddDiary(diary);
         return CreatedAtAction(nameof(GetDiaries), new { id = diary.DiaryID }, diary);
     }
@@ -69,5 +57,23 @@ public class DiaryController : ControllerBase
             return NotFound("No diaries found for this user");
         }
         return Ok(diaries);
+    }
+
+    /**
+     * 根据日记ID获取日记
+     */
+    [HttpGet("detail/{diaryId}")]
+    public async Task<IActionResult> GetDiaryById(int diaryId)
+    {
+        if (diaryId <= 0)
+        {
+            return BadRequest("Invalid diary ID");
+        }
+        var diary = await _diaryService.GetDiaryById(diaryId);
+        if (diary == null)
+        {
+            return NotFound(new { message = "Diary not found" });
+        }
+        return Ok(diary);
     }
 }

@@ -8,4 +8,8 @@ public class DiaryDto : Diary
     public string? sentiment { get; set; }
 
     public double? sentimentScore { get; set; }
+
+    public string? Abc { get; set; }
+
+    public string? Maslow { get; set; }
 }
