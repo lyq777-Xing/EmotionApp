@@ -402,3 +402,4 @@ FodyWeavers.xsd
 .venv
 /Algorithm
 
+EmotionAppBackend/appsettings.json
