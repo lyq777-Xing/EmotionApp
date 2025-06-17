@@ -171,16 +171,16 @@ export default function DiaryCreateScreen() {
   const handleEmotionAnalysis = async () => {
     try {
       // 这里添加情绪分析的API调用
-      // const response = await fetch('http://43.163.197.54:5000/emotion/analyze', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({ content }),
-      // });
+      const response = await fetch('http://123.60.174.147:5000/emotion/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+      });
       
-      // const result = await response.json();
-      // setEmotionResult(result);
+      const result = await response.json();
+      setEmotionResult(result);
 
       // 模拟情绪分析结果 - 注意 emotion 应该是 0/1 而不是 happy/sad
       const res = {
