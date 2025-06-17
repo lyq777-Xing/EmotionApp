@@ -51,14 +51,20 @@ const MenuItem = ({
     activeOpacity={0.7}
   >
     <View style={styles.menuItemLeft}>
-      <View style={[
-        styles.iconContainer, 
-        { backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }
-      ]}>
-        <IconSymbol 
-          size={20} 
-          name={icon} 
-          color={isDark ? Colors.dark.tint : Colors.light.tint} 
+      <View
+        style={[
+          styles.iconContainer,
+          {
+            backgroundColor: isDark
+              ? "rgba(255,255,255,0.1)"
+              : "rgba(0,0,0,0.05)",
+          },
+        ]}
+      >
+        <IconSymbol
+          size={20}
+          name={icon}
+          color={isDark ? Colors.dark.tint : Colors.light.tint}
         />
       </View>
       <ThemedText style={styles.menuItemText}>{title}</ThemedText>
@@ -102,16 +108,16 @@ export default function UserScreen() {
       onPress: () => router.push("/emotion-knowledge"),
     },
     {
-      id: "diary-list",
-      title: "查看日记",
-      icon: "book.fill",
-      onPress: () => router.push("/diary/list"),
-    },
-    {
       id: "emotion-square",
       title: "情绪广场",
       icon: "person.3.fill",
       onPress: () => router.push("/emotion-square"),
+    },
+    {
+      id: "diary-list",
+      title: "查看日记",
+      icon: "book.fill",
+      onPress: () => router.push("/diary/list"),
     },
     {
       id: "ai-assistant",
@@ -198,12 +204,12 @@ export default function UserScreen() {
                 title={item.title}
                 onPress={item.onPress}
                 isDark={isDark}
-                isLast={index === 2}
+                isLast={index === 3}
               />
             ))}
           </ThemedView>
 
-          <Divider isDark={isDark} />
+          {/* <Divider isDark={isDark} /> */}
 
           <ThemedView style={styles.menuSection}>
             <ThemedText style={styles.sectionTitle}>帮助与功能</ThemedText>
