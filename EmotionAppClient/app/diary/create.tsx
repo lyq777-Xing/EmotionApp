@@ -169,29 +169,19 @@ export default function DiaryCreateScreen() {
 
   // 处理情绪分析
   const handleEmotionAnalysis = async () => {
-    try {
+    try {      
       // 这里添加情绪分析的API调用
       const response = await fetch('http://123.60.174.147:5000/emotion/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({ text: content }),
       });
       
       const result = await response.json();
       setEmotionResult(result);
 
-      // 模拟情绪分析结果 - 注意 emotion 应该是 0/1 而不是 happy/sad
-      const res = {
-        "emotion": "1", // 1表示积极情绪，0表示消极情绪
-        "intensity": 0.8,
-        "content": content
-      };
-      
-      // 这里模拟情绪分析结果
-      setEmotionResult(res);
-      
       // 关闭当前对话框，显示情绪分析结果
       setModalVisible(false);
       
@@ -199,8 +189,8 @@ export default function DiaryCreateScreen() {
       router.push({
         pathname: '/diary/analysis',
         params: {
-          emotion: res.emotion,     // 直接传递 emotion 值
-          intensity: res.intensity, // 直接传递 intensity 值
+          emotion: result.emotion,     // 直接传递 emotion 值
+          intensity: result.intensity, // 直接传递 intensity 值
           content: content,         // 传递日记内容用于进一步分析
           title: title              // 传递标题
         }
