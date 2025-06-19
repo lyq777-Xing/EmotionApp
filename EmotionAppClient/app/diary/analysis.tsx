@@ -203,6 +203,8 @@ export default function DiaryAnalysisScreen() {
       
       // 从后端获取数据，参数格式: /api/EmotionKnowledge/recommend?category=0&intensity=0.5
       // category直接使用从create.tsx传过来的emotion值
+      // TODO 将API接口封装成一个函数，便于复用
+      // 使用axios发送GET请求
       const response = await axios.get(
         "http://localhost:5081/api/EmotionKnowledge/recommend",
         {
@@ -257,6 +259,7 @@ export default function DiaryAnalysisScreen() {
     setLoading(true);
     setAnalysisType("abc");
     try {
+      // TODO 将API接口封装成一个函数，便于复用
       // 尝试调用 gemma3 的 ABC 接口
       const response = await axios.get("http://localhost:5081/api/gemma3", {
         params: {
@@ -283,6 +286,7 @@ export default function DiaryAnalysisScreen() {
     setAnalysisType("maslow");
     try {
       // 尝试调用标准的马斯洛接口
+      // TODO 将API接口封装成一个函数，便于复用
       const response = await axios.get("http://localhost:5081/api/gemma3", {
         params: {
           theory: "maslow",
