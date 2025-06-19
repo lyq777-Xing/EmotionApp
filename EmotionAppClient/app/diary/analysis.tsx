@@ -44,20 +44,24 @@ type KnowledgeRecommendation = {
 export default function DiaryAnalysisScreen() {
   const { theme } = useTheme();
   const isDark = theme === "dark";
+
+  // 获取路由参数
+  // 使用 useLocalSearchParams 获取参数
   const params = useLocalSearchParams();
 
   // 从前一个页面获取情绪分析结果
-  const [emotion, setEmotion] = useState(0);
+  // 使用 useState Hook 来定义组件的状态。
+  // 定义一个状态变量来存储情绪类型  初始值： 0
+  const [emotion, setEmotion] = useState(0); 
   const [intensity, setIntensity] = useState(0.55);
   const [diaryContent, setDiaryContent] = useState("");
   const [diaryTitle, setDiaryTitle] = useState("");
-
   const [loading, setLoading] = useState(false);
+  // 作用： 控制分析类型的选择
   const [analysisType, setAnalysisType] = useState<"none" | "abc" | "maslow">(
     "none"
   );
   const [analysisResult, setAnalysisResult] = useState<string | null>(null);
-
   // 情绪知识推荐相关状态
   const [recommendations, setRecommendations] = useState<
     KnowledgeRecommendation[]
@@ -65,60 +69,177 @@ export default function DiaryAnalysisScreen() {
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   // 添加标记以防止重复请求
   const [hasRequestedRecommendations, setHasRequestedRecommendations] = useState(false);
-
-  // 在组件加载时处理参数
+  // 添加参数有效性标记
+  const [hasValidParams, setHasValidParams] = useState(false);// 在组件加载时处理参数
   useEffect(() => {
+    console.log('收到的所有参数:', params);
+    console.log('参数类型检查:', {
+      emotion: typeof params.emotion,
+      intensity: typeof params.intensity,
+      content: typeof params.content,
+      title: typeof params.title
+    });
+    
     // 检查是否使用 result 字符串传递参数（旧方式）
     if (params.result) {
       try {
         const resultObj = JSON.parse(params.result as string);
-        setEmotion(resultObj.emotion === "1" ? 1 : 0);
-        setIntensity(resultObj.intensity || 0.55);
-        setDiaryContent(resultObj.content || "");
-        setDiaryTitle(resultObj.title || "");
+        console.log('解析的result对象:', resultObj);
+          // 处理情绪类型，支持多种情绪值
+        const emotionValue = Number.parseInt(String(resultObj.emotion), 10);
+        if (!Number.isNaN(emotionValue)) {
+          setEmotion(emotionValue);
+        }
+        
+        // 处理情绪强度，确保在合理范围内
+        const intensityValue = Number.parseFloat(String(resultObj.intensity));
+        if (!Number.isNaN(intensityValue)) {
+          setIntensity(Math.max(0, Math.min(1, intensityValue))); // 限制在0-1之间
+        }setDiaryContent(String(resultObj.content || ""));
+        setDiaryTitle(String(resultObj.title || ""));
+        
+        // 标记参数有效
+        setHasValidParams(true);
+          // 参数解析完成后，立即调用API获取推荐
+        if (!hasRequestedRecommendations && (!Number.isNaN(emotionValue) || !Number.isNaN(intensityValue))) {
+          fetchKnowledgeRecommendations(
+            Number.isNaN(emotionValue) ? 0 : emotionValue, 
+            Number.isNaN(intensityValue) ? 0.5 : intensityValue
+          );
+        }
       } catch (error) {
         console.error("解析 result 参数失败:", error);
+        // 标记参数无效
+        setHasValidParams(false);
+      }
+    } else if (params.emotion || params.intensity || params.content || params.title) {
+      // 直接从单独的参数获取（新方式）
+      console.log('使用新方式获取参数');
+      
+      try {        // 处理情绪类型 - 更健壮的转换
+        let emotionValue: number | undefined;
+        if (params.emotion !== undefined && params.emotion !== null) {
+          if (typeof params.emotion === 'string') {
+            emotionValue = Number.parseInt(params.emotion, 10);
+          } else if (typeof params.emotion === 'number') {
+            emotionValue = params.emotion;
+          } else {
+            // 如果是其他类型，尝试转换为字符串再解析
+            emotionValue = Number.parseInt(String(params.emotion), 10);
+          }
+        }
+        if (emotionValue !== undefined && !Number.isNaN(emotionValue)) {
+          setEmotion(emotionValue);
+        }
+        
+        // 处理情绪强度 - 更健壮的转换
+        let intensityValue: number | undefined;
+        if (params.intensity !== undefined && params.intensity !== null) {
+          if (typeof params.intensity === 'string') {
+            intensityValue = Number.parseFloat(params.intensity);
+          } else if (typeof params.intensity === 'number') {
+            intensityValue = params.intensity;
+          } else {
+            // 如果是其他类型，尝试转换为字符串再解析
+            intensityValue = Number.parseFloat(String(params.intensity));
+          }
+        }
+        if (intensityValue !== undefined && !Number.isNaN(intensityValue)) {
+          setIntensity(Math.max(0, Math.min(1, intensityValue))); // 限制在0-1之间
+        }
+        
+        // 处理内容和标题
+        setDiaryContent(String(params.content || ""));
+        setDiaryTitle(String(params.title || ""));        console.log('最终设置的值:', {
+          emotion: emotionValue,
+          intensity: intensityValue,
+          content: String(params.content || ""),
+          title: String(params.title || "")
+        });
+        
+        // 标记参数有效
+        setHasValidParams(true);
+        
+        // 参数解析完成后，立即调用API获取推荐
+        if (!hasRequestedRecommendations && (emotionValue !== undefined || intensityValue !== undefined)) {
+          fetchKnowledgeRecommendations(emotionValue || 0, intensityValue || 0.5);
+        }
+      } catch (error) {
+        console.error("解析参数失败:", error);
+        // 标记参数无效
+        setHasValidParams(false);
       }
     } else {
-      // 直接从单独的参数获取（新方式）
-      setEmotion(params.emotion === "1" ? 1 : 0);
-      setIntensity(Number(params.intensity) || 0.55);
-      setDiaryContent((params.content as string) || "");
-      setDiaryTitle((params.title as string) || "");
+      console.log('没有收到任何有效参数');
+      // 标记参数无效
+      setHasValidParams(false);
     }
-  }, [params]); // 此useEffect只处理参数解析，不再调用API
-
-  // 单独的useEffect处理API调用
+  }, [params, hasRequestedRecommendations]); // 此useEffect只处理参数解析，不再调用API  // 单独的useEffect处理API调用
   useEffect(() => {
-    // 如果已经请求过，就不再重复请求
-    if (!hasRequestedRecommendations) {
+    // 使用 hasValidParams 来判断是否应该调用API
+    if (!hasRequestedRecommendations && hasValidParams) {
+      console.log('触发API调用，当前状态:', { emotion, intensity, hasRequestedRecommendations, hasValidParams });
       fetchKnowledgeRecommendations();
     }
-  }, [hasRequestedRecommendations]); // 只依赖于是否已请求标记
+  }, [emotion, intensity, hasRequestedRecommendations, hasValidParams]); // 依赖于相关状态的值变化
 
   // 处理返回主页
   const handleBack = () => {
     router.push("/(tabs)");
-  };
-
-  // 获取情绪知识推荐
-  const fetchKnowledgeRecommendations = async () => {
+  };  // 获取情绪知识推荐
+  const fetchKnowledgeRecommendations = async (emotionValue?: number, intensityValue?: number) => {
     setLoadingRecommendations(true);
+    
+    // 使用传入的参数或当前状态值
+    const currentEmotion = emotionValue !== undefined ? emotionValue : emotion;
+    const currentIntensity = intensityValue !== undefined ? intensityValue : intensity;
+    
     try {
-      // 从后端获取数据
+      console.log('发送推荐请求参数:', {
+        category: currentEmotion,
+        intensity: currentIntensity,
+        来源: emotionValue !== undefined ? '传入参数' : '当前状态'
+      });
+      
+      // 从后端获取数据，参数格式: /api/EmotionKnowledge/recommend?category=0&intensity=0.5
+      // category直接使用从create.tsx传过来的emotion值
       const response = await axios.get(
         "http://localhost:5081/api/EmotionKnowledge/recommend",
         {
           params: {
-            category: emotion ,
-            intensity: intensity,
+            category: currentEmotion,
+            intensity: currentIntensity,
           },
         }
-      );
-      setRecommendations(response.data);
+      );      console.log('推荐API响应:', response.data);
+      console.log('第一个推荐项详情:', response.data[0]);
+      if (response.data[0]) {
+        console.log('emotionCategory字段:', response.data[0].emotionCategory, typeof response.data[0].emotionCategory);
+        console.log('emotionIntensity字段:', response.data[0].emotionIntensity, typeof response.data[0].emotionIntensity);
+      }
+        // 对API响应数据进行类型规范化
+      const normalizedRecommendations = response.data.map((rec: Record<string, unknown>) => ({
+        ...rec,
+        emotionCategory: typeof rec.emotionCategory === 'string' 
+          ? Number.parseInt(rec.emotionCategory, 10) 
+          : rec.emotionCategory,
+        emotionIntensity: typeof rec.emotionIntensity === 'string'
+          ? Number.parseFloat(rec.emotionIntensity)
+          : rec.emotionIntensity
+      })) as KnowledgeRecommendation[];
+      
+      console.log('规范化后的推荐数据:', normalizedRecommendations[0]);
+      setRecommendations(normalizedRecommendations);
       setHasRequestedRecommendations(true); // 设置标记为已请求
     } catch (error) {
       console.error("获取情绪知识推荐失败:", error);
+      if (axios.isAxiosError(error)) {
+        console.error("API错误详情:", {
+          status: error.response?.status,
+          data: error.response?.data,
+          message: error.message
+        });
+      }
     } finally {
       setLoadingRecommendations(false);
     }
@@ -198,7 +319,7 @@ export default function DiaryAnalysisScreen() {
                   if (item.includes("*   ") || item.includes("*  ")) {
                     const content = item.replace(/^\s*\*\s*/, "");
                     return (
-                      <View key={`item-${itemIndex}`} style={styles.listItem}>
+                      <View key={`item-${item.substring(0, 10)}-${index}-${itemIndex}`} style={styles.listItem}>
                         <Text
                           style={[
                             styles.bulletPoint,
@@ -217,26 +338,31 @@ export default function DiaryAnalysisScreen() {
                         </Text>
                       </View>
                     );
-                  } else if (item.trim()) {
+                  }
+                  
+                  if (item.trim()) {
                     // 列表中的非列表项文本
                     return (
                       <Text
-                        key={`text-${itemIndex}`}
+                        key={`text-${item.substring(0, 10)}-${index}-${itemIndex}`}
                         style={[styles.paragraph, isDark && styles.textDark]}
                       >
                         {item}
                       </Text>
                     );
                   }
+                  
                   return null;
                 })}
               </View>
             );
-          } else if (paragraph.trim()) {
-            // 处理普通段落
+          }
+          
+          // 处理普通段落
+          if (paragraph.trim()) {
             return (
               <Text
-                key={`para-${index}`}
+                key={`para-${paragraph.substring(0, 10)}-${index}`}
                 style={[styles.paragraph, isDark && styles.textDark]}
               >
                 {paragraph}
@@ -288,9 +414,33 @@ export default function DiaryAnalysisScreen() {
           情绪分析
         </Text>
         <View style={styles.placeholder} />
-      </View>
-
-      <ScrollView style={styles.content}>
+      </View>      <ScrollView style={styles.content}>
+        {!hasValidParams ? (
+          // 当参数无效时显示友好提示
+          <View style={[styles.emotionCard, isDark && styles.emotionCardDark]}>
+            <View style={styles.emotionContent}>
+              <Ionicons
+                name="information-circle-outline"
+                size={80}
+                color={isDark ? Colors.dark.tint : Colors.light.tint}
+                style={styles.emotionIcon}
+              />
+              <Text style={[styles.emotionText, isDark && styles.textDark]}>
+                无法获取分析数据
+              </Text>
+              <Text style={[styles.subtitle, isDark && styles.textDark]}>
+                抱歉，我们无法获取到您的日记分析数据。请返回日记创建页面重新进行情绪分析。
+              </Text>
+              <Button 
+                onPress={() => router.push('/diary/create')} 
+                style={styles.analysisButton}
+              >
+                <ButtonText>重新分析</ButtonText>
+              </Button>
+            </View>
+          </View>
+        ) : (
+          <>
         <View style={[styles.emotionCard, isDark && styles.emotionCardDark]}>
           <View style={styles.emotionContent}>
             {emotion === 1 ? (
@@ -421,8 +571,7 @@ export default function DiaryAnalysisScreen() {
                 ]}
               >
                 <View style={styles.recommendationHeader}>
-                  <View style={styles.emotionCategoryContainer}>
-                    <Text
+                  <View style={styles.emotionCategoryContainer}>                    <Text
                       style={[
                         styles.emotionCategory,
                         isDark && styles.textDark,
@@ -512,10 +661,10 @@ export default function DiaryAnalysisScreen() {
               </View>
             ))}
           </View>
-        )}
-
-        {/* 添加底部间距，确保内容在滚动时完全可见 */}
+        )}        {/* 添加底部间距，确保内容在滚动时完全可见 */}
         <View style={styles.bottomPadding} />
+        </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -800,8 +949,15 @@ const styles = StyleSheet.create({
   linkButtonText: {
     color: "#FFF",
     fontSize: 14,
-  },
-  bottomPadding: {
+  },  bottomPadding: {
     height: 16,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: "#666",
+    textAlign: "center",
+    marginTop: 8,
+    marginBottom: 16,
+    lineHeight: 20,
   },
 });
