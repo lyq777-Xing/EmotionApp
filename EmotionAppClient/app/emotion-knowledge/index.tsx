@@ -12,7 +12,7 @@ export default function EmotionKnowledgePage() {
   const [filteredList, setFilteredList] = useState<EmotionKnowledge[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [filter, setFilter] = useState<string | null>(null); // null = all, "0" = negative, "1" = positive
+  const [filter, setFilter] = useState<number | null>(null); // null = all, 0 = negative, 1 = positive
   const { theme } = useTheme();
 
   // Fetch knowledge data on component mount
@@ -61,17 +61,16 @@ export default function EmotionKnowledgePage() {
     if (intensity < 0.6) return '中等';
     return '强烈';
   };
-
   // Get color based on emotion category and intensity
-  const getEmotionColor = (category: string, intensity: number): string => {
-    if (category === "1") { // Positive
+  const getEmotionColor = (category: number, intensity: number): string => {
+    if (category === 1) { // Positive
       // Green shades
       if (intensity < 0.4) return '#8BC34A';
       if (intensity < 0.7) return '#4CAF50';
       return '#009688';
     }
     
-    // Negative (category === "0" or any other value)
+    // Negative (category === 0 or any other value)
     // Red/orange shades
     if (intensity < 0.4) return '#FFCC80';
     if (intensity < 0.7) return '#FF9800';
@@ -121,19 +120,18 @@ export default function EmotionKnowledgePage() {
             全部
           </Text>
         </TouchableOpacity>
-        
-        <TouchableOpacity 
+          <TouchableOpacity 
           style={[
             styles.filterTab, 
-            filter === "1" && styles.activeFilterTab,
-            { borderColor: filter === "1" ? '#4CAF50' : theme === 'dark' ? '#555555' : '#dddddd' }
+            filter === 1 && styles.activeFilterTab,
+            { borderColor: filter === 1 ? '#4CAF50' : theme === 'dark' ? '#555555' : '#dddddd' }
           ]}
-          onPress={() => setFilter("1")}
+          onPress={() => setFilter(1)}
         >
           <Text style={[
             styles.filterText, 
-            filter === "1" && styles.activeFilterText,
-            { color: filter === "1" ? '#4CAF50' : theme === 'dark' ? '#dddddd' : '#666666' }
+            filter === 1 && styles.activeFilterText,
+            { color: filter === 1 ? '#4CAF50' : theme === 'dark' ? '#dddddd' : '#666666' }
           ]}>
             积极情绪
           </Text>
@@ -142,15 +140,15 @@ export default function EmotionKnowledgePage() {
         <TouchableOpacity 
           style={[
             styles.filterTab, 
-            filter === "0" && styles.activeFilterTab,
-            { borderColor: filter === "0" ? '#F44336' : theme === 'dark' ? '#555555' : '#dddddd' }
+            filter === 0 && styles.activeFilterTab,
+            { borderColor: filter === 0 ? '#F44336' : theme === 'dark' ? '#555555' : '#dddddd' }
           ]}
-          onPress={() => setFilter("0")}
+          onPress={() => setFilter(0)}
         >
           <Text style={[
             styles.filterText, 
-            filter === "0" && styles.activeFilterText,
-            { color: filter === "0" ? '#F44336' : theme === 'dark' ? '#dddddd' : '#666666' }
+            filter === 0 && styles.activeFilterText,
+            { color: filter === 0 ? '#F44336' : theme === 'dark' ? '#dddddd' : '#666666' }
           ]}>
             消极情绪
           </Text>
@@ -191,9 +189,8 @@ export default function EmotionKnowledgePage() {
               >
                 <View style={[styles.emotionCategoryBadge, { 
                   backgroundColor: getEmotionColor(item.emotionCategory, item.emotionIntensity) 
-                }]}>
-                  <Text style={styles.emotionCategoryText}>
-                    {item.emotionCategory === "1" ? "积极" : "消极"}
+                }]}>                  <Text style={styles.emotionCategoryText}>
+                    {item.emotionCategory === 1 ? "积极" : "消极"}
                     {" · "}
                     {getIntensityLabel(item.emotionIntensity)}
                   </Text>

@@ -17,7 +17,7 @@ apiClient.interceptors.request.use(
 
     // If token exists, add to headers
     if (token && config.headers) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
@@ -38,7 +38,7 @@ emotionApiClient.interceptors.request.use(
     // For web platform, set mode to 'cors' and add necessary headers
     if (config.headers) {
       config.headers["Access-Control-Request-Method"] = "POST";
-      config.headers["Origin"] = "http://localhost:8081";
+      config.headers.Origin = "http://localhost:8081";
     }
     return config;
   },
@@ -85,7 +85,7 @@ export interface EmotionChartItem {
  */
 export interface EmotionKnowledge {
   id: number;
-  emotionCategory: string; // "0" for negative, "1" for positive
+  emotionCategory: number; // 统一使用 number 类型，0 for negative, 1 for positive
   emotionIntensity: number;
   recommendedAction: string;
   psychologicalBasis: string;
@@ -93,6 +93,22 @@ export interface EmotionKnowledge {
   contentUrl: string | null;
   targetNeeds: string;
   description: string;
+}
+
+/**
+ * Interface for psychological analysis response
+ */
+export interface PsychologicalAnalysisResponse {
+  authorName: string;
+  role: {
+    label: string;
+  };
+  items: {
+    $type: string;
+    text: string;
+    modelId: string;
+  }[];
+  modelId: string;
 }
 
 /**
@@ -105,7 +121,7 @@ export const login = async (credentials: LoginRequest): Promise<boolean> => {
       credentials
     );
     console.log("Login response:", response.data);
-    if (response.data && response.data.token) {
+    if (response.data?.token) {
       // Store token in AsyncStorage
       await AsyncStorage.setItem("auth_token", response.data.token);
 
@@ -216,7 +232,19 @@ export const getEmotionKnowledgeList = async (): Promise<EmotionKnowledge[]> => 
   try {
     const response = await apiClient.get('/EmotionKnowledge/list');
     console.log('Emotion knowledge response:', response.data);
-    return response.data;
+    
+    // 对API响应数据进行类型规范化，确保数据类型一致
+    const normalizedKnowledge = response.data.map((item: Record<string, unknown>) => ({
+      ...item,
+      emotionCategory: typeof item.emotionCategory === 'string' 
+        ? Number.parseInt(item.emotionCategory, 10) 
+        : item.emotionCategory,
+      emotionIntensity: typeof item.emotionIntensity === 'string'
+        ? Number.parseFloat(item.emotionIntensity)
+        : item.emotionIntensity
+    })) as EmotionKnowledge[];
+    
+    return normalizedKnowledge;
   } catch (error) {
     console.error('Failed to fetch emotion knowledge list:', error);
     throw error;
@@ -316,21 +344,96 @@ const mockEmotionAnalysis = (
   let positiveCount = 0;
   let negativeCount = 0;
 
-  positiveWords.forEach((word) => {
+  for (const word of positiveWords) {
     if (contentLower.includes(word)) positiveCount++;
-  });
+  }
 
-  negativeWords.forEach((word) => {
+  for (const word of negativeWords) {
     if (contentLower.includes(word)) negativeCount++;
-  });
+  }
 
   // Determine emotion (0 for negative, 1 for positive)
   const emotion = positiveCount >= negativeCount ? "1" : "0";
 
   // Calculate intensity (between 0.3 and 0.9)
   const totalCount = positiveCount + negativeCount;
-  let intensity =
+  const intensity =
     totalCount > 0 ? Math.max(0.3, Math.min(0.9, totalCount / 10 + 0.3)) : 0.5;
 
   return { emotion, intensity };
+};
+
+/**
+ * Get emotion knowledge recommendations based on category and intensity
+ */
+export const getEmotionKnowledgeRecommendations = async (
+  category: number,
+  intensity: number
+): Promise<EmotionKnowledge[]> => {
+  try {
+    const response = await apiClient.get('/EmotionKnowledge/recommend', {
+      params: {
+        category,
+        intensity
+      }
+    });
+    
+    console.log('情绪知识推荐API响应:', response.data);
+    
+    // 对API响应数据进行类型规范化
+    const normalizedRecommendations = response.data.map((rec: Record<string, unknown>) => ({
+      ...rec,
+      emotionCategory: typeof rec.emotionCategory === 'string' 
+        ? Number.parseInt(rec.emotionCategory, 10) 
+        : rec.emotionCategory,
+      emotionIntensity: typeof rec.emotionIntensity === 'string'
+        ? Number.parseFloat(rec.emotionIntensity)
+        : rec.emotionIntensity
+    })) as EmotionKnowledge[];
+    
+    return normalizedRecommendations;
+  } catch (error) {
+    console.error('获取情绪知识推荐失败:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get psychological analysis using ABC theory
+ */
+export const getAbcAnalysis = async (context: string): Promise<string> => {
+  try {
+    const response = await apiClient.get<PsychologicalAnalysisResponse>('/gemma3', {
+      params: {
+        theory: 'abc',
+        context
+      }
+    });
+    
+    console.log('ABC分析API响应:', response.data);
+    return response.data.items[0].text;
+  } catch (error) {
+    console.error('ABC分析请求失败:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get psychological analysis using Maslow's hierarchy of needs
+ */
+export const getMaslowAnalysis = async (context: string): Promise<string> => {
+  try {
+    const response = await apiClient.get<PsychologicalAnalysisResponse>('/gemma3', {
+      params: {
+        theory: 'maslow',
+        context
+      }
+    });
+    
+    console.log('马斯洛分析API响应:', response.data);
+    return response.data.items[0].text;
+  } catch (error) {
+    console.error('马斯洛分析请求失败:', error);
+    throw error;
+  }
 };

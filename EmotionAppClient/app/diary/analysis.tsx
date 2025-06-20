@@ -14,7 +14,12 @@ import { router, useLocalSearchParams } from "expo-router";
 import { Button, ButtonText } from "@/components/ui/button";
 import { useTheme } from "@/utils/ThemeContext";
 import { Colors } from "@/constants/Colors";
-import axios from "axios";
+import { 
+  getEmotionKnowledgeRecommendations, 
+  getAbcAnalysis, 
+  getMaslowAnalysis,
+  type EmotionKnowledge 
+} from "@/utils/apiService";
 
 type AnalysisResponse = {
   authorName: string;
@@ -27,18 +32,6 @@ type AnalysisResponse = {
     modelId: string;
   }[];
   modelId: string;
-};
-
-type KnowledgeRecommendation = {
-  id: number;
-  emotionCategory: number;
-  emotionIntensity: number;
-  recommendedAction: string;
-  psychologicalBasis: string;
-  contentType: string;
-  contentUrl: string | null;
-  targetNeeds: string;
-  description: string;
 };
 
 export default function DiaryAnalysisScreen() {
@@ -61,10 +54,9 @@ export default function DiaryAnalysisScreen() {
   const [analysisType, setAnalysisType] = useState<"none" | "abc" | "maslow">(
     "none"
   );
-  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
-  // 情绪知识推荐相关状态
+  const [analysisResult, setAnalysisResult] = useState<string | null>(null);  // 情绪知识推荐相关状态
   const [recommendations, setRecommendations] = useState<
-    KnowledgeRecommendation[]
+    EmotionKnowledge[]
   >([]);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   // 添加标记以防止重复请求
@@ -200,48 +192,16 @@ export default function DiaryAnalysisScreen() {
         intensity: currentIntensity,
         来源: emotionValue !== undefined ? '传入参数' : '当前状态'
       });
-      
-      // 从后端获取数据，参数格式: /api/EmotionKnowledge/recommend?category=0&intensity=0.5
-      // category直接使用从create.tsx传过来的emotion值
-      // TODO 将API接口封装成一个函数，便于复用
-      // 使用axios发送GET请求
-      const response = await axios.get(
-        "http://localhost:5081/api/EmotionKnowledge/recommend",
-        {
-          params: {
-            category: currentEmotion,
-            intensity: currentIntensity,
-          },
-        }
-      );      console.log('推荐API响应:', response.data);
-      console.log('第一个推荐项详情:', response.data[0]);
-      if (response.data[0]) {
-        console.log('emotionCategory字段:', response.data[0].emotionCategory, typeof response.data[0].emotionCategory);
-        console.log('emotionIntensity字段:', response.data[0].emotionIntensity, typeof response.data[0].emotionIntensity);
-      }
-        // 对API响应数据进行类型规范化
-      const normalizedRecommendations = response.data.map((rec: Record<string, unknown>) => ({
-        ...rec,
-        emotionCategory: typeof rec.emotionCategory === 'string' 
-          ? Number.parseInt(rec.emotionCategory, 10) 
-          : rec.emotionCategory,
-        emotionIntensity: typeof rec.emotionIntensity === 'string'
-          ? Number.parseFloat(rec.emotionIntensity)
-          : rec.emotionIntensity
-      })) as KnowledgeRecommendation[];
-      
+        // 使用封装好的API方法
+      const normalizedRecommendations = await getEmotionKnowledgeRecommendations(
+        currentEmotion,
+        currentIntensity
+      );      
       console.log('规范化后的推荐数据:', normalizedRecommendations[0]);
       setRecommendations(normalizedRecommendations);
       setHasRequestedRecommendations(true); // 设置标记为已请求
     } catch (error) {
       console.error("获取情绪知识推荐失败:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("API错误详情:", {
-          status: error.response?.status,
-          data: error.response?.data,
-          message: error.message
-        });
-      }
     } finally {
       setLoadingRecommendations(false);
     }
@@ -253,52 +213,28 @@ export default function DiaryAnalysisScreen() {
       Linking.openURL(url).catch((err) => console.error("无法打开链接:", err));
     }
   };
-
   // 执行ABC情绪调节分析
   const handleAbcAnalysis = async () => {
     setLoading(true);
     setAnalysisType("abc");
     try {
-      // TODO 将API接口封装成一个函数，便于复用
-      // 尝试调用 gemma3 的 ABC 接口
-      const response = await axios.get("http://localhost:5081/api/gemma3", {
-        params: {
-          theory: "abc",
-          context: diaryContent,
-        },
-      });
-
-      // 保存完整的 JSON 响应，仅用于调试
-      console.log("ABC分析响应:", JSON.stringify(response.data));
-
-      // 提取文本用于显示
-      setAnalysisResult(response.data.items[0].text);
+      // 使用封装好的API方法
+      const analysisText = await getAbcAnalysis(diaryContent);
+      setAnalysisResult(analysisText);
     } catch (error) {
       console.error("ABC分析请求失败:", error);
     } finally {
       setLoading(false);
     }
   };
-
   // 执行马斯洛需求分析
   const handleMaslowAnalysis = async () => {
     setLoading(true);
     setAnalysisType("maslow");
     try {
-      // 尝试调用标准的马斯洛接口
-      // TODO 将API接口封装成一个函数，便于复用
-      const response = await axios.get("http://localhost:5081/api/gemma3", {
-        params: {
-          theory: "maslow",
-          context: diaryContent,
-        },
-      });
-
-      // 保存完整的 JSON 响应，仅用于调试
-      console.log("马斯洛分析响应:", JSON.stringify(response.data));
-
-      // 提取文本用于显示
-      setAnalysisResult(response.data.items[0].text);
+      // 使用封装好的API方法
+      const analysisText = await getMaslowAnalysis(diaryContent);
+      setAnalysisResult(analysisText);
     } catch (error) {
       console.error("马斯洛分析请求失败:", error);
     } finally {
