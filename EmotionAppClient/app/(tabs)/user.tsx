@@ -160,7 +160,7 @@ export default function UserScreen() {
         {/* Gradient Header Background */}
         <View style={styles.headerContainer}>
           <LinearGradient
-            colors={isDark ? ["#2563eb", "#1e40af"] : ["#3b82f6", "#2563eb"]}
+            colors={isDark ? ["#9E74BD", "#CCC3DB"] : ["#8F8FFF", "#DAEDF4"]}
             style={styles.headerGradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -172,18 +172,23 @@ export default function UserScreen() {
                   style={styles.avatar}
                 />
                 <View style={styles.avatarBadge} />
-              </View>
-              <View style={styles.userInfo}>
-                <ThemedText style={styles.username}>
+              </View>              <View style={styles.userInfo}>
+                <Text style={[
+                  styles.username,
+                  { color: isDark ? "rgba(255,255,255,0.9)" : "rgba(21, 21, 21, 0.7)" }
+                ]}>
                   {user?.username || "用户"}
-                </ThemedText>
+                </Text>
                 <View style={styles.emailContainer}>
                   <IconSymbol
                     size={12}
                     name="envelope.fill"
-                    color="rgba(255,255,255,0.9)"
+                    color={isDark ? "rgba(255,255,255,0.9)" : "rgba(27, 26, 26, 0.7)"}
                   />
-                  <Text style={styles.email}>
+                  <Text style={[
+                    styles.email,
+                    { color: isDark ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.7)" }
+                  ]}>
                     {user?.email || "user@example.com"}
                   </Text>
                 </View>
@@ -295,12 +300,10 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flex: 1,
-  },
-  username: {
+  },  username: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 6,
-    color: "white",
   },
   emailContainer: {
     flexDirection: "row",
@@ -308,7 +311,6 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 14,
-    color: "rgba(255,255,255,0.9)",
     marginLeft: 6,
   },
   menuContainer: {

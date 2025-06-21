@@ -171,7 +171,7 @@ export default function DiaryCreateScreen() {
   const handleEmotionAnalysis = async () => {
     try {      
       // 这里添加情绪分析的API调用
-      const response = await fetch('http://123.60.174.147:5000/emotion/analyze', {
+      const response = await fetch('http://47.254.19.110:5000/emotion/analyze', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -329,6 +329,7 @@ index}`}
             </View>
           )}
           
+          {/* TODO: 添加图片和视频的上传功能 */}
           <TouchableWithoutFeedback onPress={() => titleInputRef.current?.focus()}>
             <View style={styles.inputContainer}>
               <TextInput

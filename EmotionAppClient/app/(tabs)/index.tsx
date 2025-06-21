@@ -57,7 +57,7 @@ export default function HomeScreen() {
         fadeAnim.setValue(0)
         slideAnim.setValue(20)
       }
-    }, [])
+    }, [fadeAnim, slideAnim])
   )
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function HomeScreen() {
 
   return (
     <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1E3A47" }}
+      headerBackgroundColor={{ light: "#C2D2EC", dark: "#DBE2F5"}}
       headerImage={
         <Image
           source={require("@/assets/images/logo.png")}
