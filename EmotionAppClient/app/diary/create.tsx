@@ -11,6 +11,8 @@ import { useLocalSearchParams } from 'expo-router';
 
 import { useAuth } from "@/utils/AuthContext"
 
+import { analyzeEmotion } from '@/utils/apiService'; // 假设有一个情绪分析的API服务
+
 
 export default function DiaryCreateScreen() {
 
@@ -171,16 +173,20 @@ export default function DiaryCreateScreen() {
   const handleEmotionAnalysis = async () => {
     try {      
       // 这里添加情绪分析的API调用
-      const response = await fetch('http://47.254.19.110:5000/emotion/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ text: content }),
+      // const response = await fetch('http://47.254.19.110:5000/emotion/analyze', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ text: content }),
+      // });
+
+      const result = await analyzeEmotion(content); // 使用封装的API服务
+
+      setEmotionResult({
+        ...result,
+        content: content // Add the content property from the diary
       });
-      
-      const result = await response.json();
-      setEmotionResult(result);
 
       // 关闭当前对话框，显示情绪分析结果
       setModalVisible(false);
