@@ -403,3 +403,5 @@ FodyWeavers.xsd
 /Algorithm
 
 EmotionAppBackend/appsettings.json
+EmotionAppBackend/Utils/GetCredentialUtils.cs
+EmotionAppBackend/MSTest/UploadServiceTests.cs

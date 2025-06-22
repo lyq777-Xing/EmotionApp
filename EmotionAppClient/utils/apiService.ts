@@ -26,7 +26,7 @@ apiClient.interceptors.request.use(
 
 // Create a custom axios instance for the emotion analysis API with CORS handling
 export const emotionApiClient = axios.create({
-  baseURL: "http://43.163.197.54:5000",
+  baseURL: "http://172.29.94.203:5000",
   headers: {
     "Content-Type": "application/json",
   },

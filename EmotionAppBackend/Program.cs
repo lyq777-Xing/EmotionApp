@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using EmotionAppBackend.Models;
+using EmotionAppBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -112,6 +113,13 @@ builder.Services.AddScoped<EmotionRecommendationService>();
 builder.Services.AddScoped<EmotionKnowledgeRepository>();
 builder.Services.AddScoped<RoleService>();
 builder.Services.AddScoped<RoleRepository>();
+
+// 配置腾讯云COS设置
+builder.Services.Configure<TencentCOSSettings>(
+    builder.Configuration.GetSection("TencentCOS"));
+
+// 注册上传服务
+builder.Services.AddScoped<UploadService>();
 
 var app = builder.Build();
 

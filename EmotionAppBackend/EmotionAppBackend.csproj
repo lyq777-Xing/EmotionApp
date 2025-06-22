@@ -5,9 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
-
-    <ItemGroup>
+    </PropertyGroup>    <ItemGroup>
         <PackageReference Include="AutoMapper" Version="14.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
@@ -19,11 +17,16 @@
         <PackageReference Include="Microsoft.SemanticKernel" Version="1.45.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Agents.Core" Version="1.45.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.45.0-alpha" />
+        <PackageReference Include="Moq" Version="4.20.72" />
         <PackageReference Include="MSTest" Version="3.8.2" />
+        <PackageReference Include="MSTest.TestFramework" Version="3.8.2" />
+        <PackageReference Include="MSTest.TestAdapter" Version="3.8.2" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0-preview.3.efcore.9.0.0" />
         <PackageReference Include="Scalar.AspNetCore" Version="2.0.34" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
         <PackageReference Include="System.Security.Claims" Version="4.3.0" />
+        <PackageReference Include="Tencent.QCloud.Cos.Sdk" Version="5.4.48" />
+        <PackageReference Include="Tencent.QCloud.Cos.Sts.Sdk" Version="3.0.5" />
     </ItemGroup>
 
     <ItemGroup>
