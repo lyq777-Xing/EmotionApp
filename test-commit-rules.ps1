@@ -18,7 +18,7 @@ foreach ($test in $testCases) {
     $expected = $test.expected
     
     # 使用 commitlint 验证消息
-    $result = echo $message | npx commitlint
+    $null = echo $message | npx commitlint 2>$null
     $isValid = $LASTEXITCODE -eq 0
     
     if ($isValid -eq $expected) {
