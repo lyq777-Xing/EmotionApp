@@ -1,0 +1,64 @@
+{
+  "name": "emotion-app-git-hooks",
+  "version": "1.0.0",
+  "description": "Git hooks for EmotionApp project",
+  "scripts": {
+    "prepare": "husky install",
+    "commit": "git-cz",
+    "commitlint": "commitlint --edit"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^17.8.1",
+    "@commitlint/config-conventional": "^17.8.1",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^8.0.3"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog",
+      "types": {
+        "feat": {
+          "description": "✨ 添加新功能",
+          "title": "Features"
+        },
+        "fix": {
+          "description": "🐛 修复 Bug",
+          "title": "Bug Fixes"
+        },
+        "docs": {
+          "description": "📝 仅文档变更",
+          "title": "Documentation"
+        },
+        "style": {
+          "description": "💄 格式变动，不影响功能（如空格）",
+          "title": "Styles"
+        },
+        "refactor": {
+          "description": "♻️ 重构，无新增功能或修复",
+          "title": "Code Refactoring"
+        },
+        "test": {
+          "description": "✅ 添加或修改测试代码",
+          "title": "Tests"
+        },
+        "chore": {
+          "description": "🔧 构建过程或辅助工具变动",
+          "title": "Chores"
+        },
+        "perf": {
+          "description": "⚡️ 性能优化",
+          "title": "Performance Improvements"
+        },
+        "ci": {
+          "description": "💚 CI/CD 脚本更新",
+          "title": "Continuous Integrations"
+        },
+        "revert": {
+          "description": "⏪ 回滚变更",
+          "title": "Reverts"
+        }
+      }
+    }
+  }
+}
