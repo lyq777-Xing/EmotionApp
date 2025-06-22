@@ -400,7 +400,6 @@ FodyWeavers.xsd
 *.sln.iml
 /.idea
 .venv
-/Algorithm
 
 EmotionAppBackend/appsettings.json
 EmotionAppBackend/Utils/GetCredentialUtils.cs
@@ -438,3 +437,5 @@ pids
 
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
+/Algorithm/Chinese_sentiment_model
+/Algorithm/HuggingFace

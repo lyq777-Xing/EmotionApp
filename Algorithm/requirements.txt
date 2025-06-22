@@ -1,0 +1,15 @@
+# 核心模型与训练
+torch==2.6.0
+transformers==4.50.3
+datasets==3.5.0
+scikit-learn==1.6.1
+numpy>=1.24.0
+
+# Web 接口
+flask>=2.0.0
+flask-restx>=1.0.0
+flask-cors
+
+# 增强与可视化
+matplotlib==3.10.1
+nlpaug>=1.1.10

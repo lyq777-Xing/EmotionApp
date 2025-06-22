@@ -1,0 +1,26 @@
+# services:
+#   app:
+#     image: emotion_model_server
+#     container_name: emotion_model_server
+#     restart: unless-stopped
+#     ports:
+#       - "5000:5000"
+#     volumes:
+#       - ./Chinese_sentiment_model:/app/Chinese_sentiment_model
+#     build: 
+#       context: .
+#       dockerfile: Dockerfile
+services:
+  app:
+    image: emotion_model_server
+    container_name: emotion_model_server
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./Chinese_sentiment_model:/app/Chinese_sentiment_model
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    network_mode: "host"
+
