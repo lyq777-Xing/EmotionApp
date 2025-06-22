@@ -8,7 +8,7 @@
 .\commit.ps1
 
 # 或者使用 npm 脚本
-npm run commit
+pnpm run commit
 ```
 
 ### 2. 手动提交

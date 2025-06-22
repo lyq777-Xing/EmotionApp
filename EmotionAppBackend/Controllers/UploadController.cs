@@ -186,5 +186,35 @@ namespace EmotionAppBackend.Controllers
                 return StatusCode(500, new { message = "批量文件上传失败", error = ex.Message });
             }
         }
+
+        /// <summary>
+        /// 检查临时密钥状态
+        /// </summary>
+        /// <returns>密钥状态信息</returns>
+        [HttpGet("credentials/status")]
+        public async Task<ActionResult<object>> GetCredentialsStatus()
+        {
+            try
+            {
+                var credentials = await _uploadService.GetTemporaryCredentialsAsync();
+                
+                return Ok(new
+                {
+                    isExpired = credentials.IsExpired,
+                    isNearExpiry = credentials.IsNearExpiry,
+                    remainingMinutes = Math.Round(credentials.RemainingMinutes, 1),
+                    totalDurationMinutes = Math.Round(credentials.TotalDurationMinutes, 1),
+                    startTime = credentials.StartTime,
+                    expiredTime = credentials.ExpiredTime,
+                    status = credentials.IsExpired ? "已过期" : 
+                             credentials.IsNearExpiry ? "即将过期" : "正常"
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "检查临时密钥状态失败");
+                return StatusCode(500, new { message = "检查临时密钥状态失败", error = ex.Message });
+            }
+        }
     }
 }

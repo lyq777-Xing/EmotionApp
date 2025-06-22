@@ -24,9 +24,7 @@ namespace EmotionAppBackend.Services
         private readonly HashSet<string> _allowedVideoFormats = new(StringComparer.OrdinalIgnoreCase)
         {
             ".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv", ".webm", ".m4v", ".3gp", ".ts"
-        };
-
-        // 最大文件大小 (100MB for images, 500MB for videos)
+        };        // 最大文件大小 (100MB for images, 500MB for videos)
         private const long MaxImageSize = 100 * 1024 * 1024; // 100MB
         private const long MaxVideoSize = 500 * 1024 * 1024; // 500MB
 
@@ -34,6 +32,18 @@ namespace EmotionAppBackend.Services
         {
             _cosSettings = cosSettings.Value;
             _logger = logger;
+            
+            // 验证配置有效性
+            if (!_cosSettings.IsValid())
+            {
+                var errorMessage = "腾讯云COS配置无效：请检查SecretId、SecretKey、Bucket、Region是否正确，" +
+                                 $"以及CredentialDurationSeconds是否在900-7200秒范围内（当前值：{_cosSettings.CredentialDurationSeconds}）";
+                _logger.LogError(errorMessage);
+                throw new ArgumentException(errorMessage);
+            }
+            
+            _logger.LogInformation("腾讯云COS配置已加载 - Bucket: {Bucket}, Region: {Region}, 密钥有效期: {Duration}秒", 
+                _cosSettings.Bucket, _cosSettings.Region, _cosSettings.CredentialDurationSeconds);
         }
 
         /// <summary>
@@ -77,36 +87,39 @@ namespace EmotionAppBackend.Services
                 
                 long startTimeStamp, expiredTimeStamp;
                 
-                if (startTimeValue is int intStartTime)
-                {
-                    startTimeStamp = intStartTime;
-                }
-                else if (startTimeValue is long longStartTime)
-                {
-                    startTimeStamp = longStartTime;
-                }
-                else
+                // 更简洁的类型转换处理
+                try
                 {
                     startTimeStamp = Convert.ToInt64(startTimeValue);
-                }
-                
-                if (expiredTimeValue is int intExpiredTime)
-                {
-                    expiredTimeStamp = intExpiredTime;
-                }
-                else if (expiredTimeValue is long longExpiredTime)
-                {
-                    expiredTimeStamp = longExpiredTime;
-                }
-                else
-                {
                     expiredTimeStamp = Convert.ToInt64(expiredTimeValue);
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "时间戳转换失败 - StartTime: {StartTime}, ExpiredTime: {ExpiredTime}", 
+                        startTimeValue, expiredTimeValue);
+                    throw new Exception("临时密钥时间戳解析失败", ex);
+                }
                 
-                var startTime = DateTimeOffset.FromUnixTimeSeconds(startTimeStamp).DateTime;
-                var expiredTime = DateTimeOffset.FromUnixTimeSeconds(expiredTimeStamp).DateTime;
-
-                var result = new TemporaryCredentialsDto
+                // 使用UTC时间避免时区问题，然后转换为本地时间
+                var startTimeUtc = DateTimeOffset.FromUnixTimeSeconds(startTimeStamp).UtcDateTime;
+                var expiredTimeUtc = DateTimeOffset.FromUnixTimeSeconds(expiredTimeStamp).UtcDateTime;
+                var startTime = startTimeUtc.ToLocalTime();
+                var expiredTime = expiredTimeUtc.ToLocalTime();
+                
+                // 验证时间有效性
+                if (expiredTime <= startTime)
+                {
+                    _logger.LogError("临时密钥时间配置异常 - 开始时间: {StartTime}, 过期时间: {ExpiredTime}", 
+                        startTime, expiredTime);
+                    throw new Exception("临时密钥时间配置异常：过期时间必须大于开始时间");
+                }
+                
+                if (expiredTime <= DateTime.Now)
+                {
+                    _logger.LogError("临时密钥已过期 - 当前时间: {Now}, 过期时间: {ExpiredTime}", 
+                        DateTime.Now, expiredTime);
+                    throw new Exception("获取的临时密钥已过期");
+                }                var result = new TemporaryCredentialsDto
                 {
                     TmpSecretId = credentials["TmpSecretId"].ToString(),
                     TmpSecretKey = credentials["TmpSecretKey"].ToString(),
@@ -117,7 +130,10 @@ namespace EmotionAppBackend.Services
                     Region = _cosSettings.Region
                 };
 
-                _logger.LogInformation("临时密钥获取成功，过期时间: {ExpiredTime}", expiredTime);
+                var duration = expiredTime - startTime;
+                _logger.LogInformation("临时密钥获取成功 - 开始时间: {StartTime}, 过期时间: {ExpiredTime}, 有效时长: {Duration}分钟", 
+                    startTime, expiredTime, Math.Round(duration.TotalMinutes, 1));
+                    
                 return result;
             }
             catch (Exception ex)

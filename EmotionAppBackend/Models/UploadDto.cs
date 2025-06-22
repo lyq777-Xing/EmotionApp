@@ -9,6 +9,26 @@ namespace EmotionAppBackend.Models
         public DateTime ExpiredTime { get; set; }
         public string Bucket { get; set; } = string.Empty;
         public string Region { get; set; } = string.Empty;
+        
+        /// <summary>
+        /// 获取剩余有效时间（分钟）
+        /// </summary>
+        public double RemainingMinutes => (ExpiredTime - DateTime.Now).TotalMinutes;
+        
+        /// <summary>
+        /// 检查密钥是否已过期
+        /// </summary>
+        public bool IsExpired => DateTime.Now >= ExpiredTime;
+        
+        /// <summary>
+        /// 检查密钥是否即将过期（5分钟内）
+        /// </summary>
+        public bool IsNearExpiry => RemainingMinutes <= 5;
+        
+        /// <summary>
+        /// 获取总有效时长（分钟）
+        /// </summary>
+        public double TotalDurationMinutes => (ExpiredTime - StartTime).TotalMinutes;
     }
 
     public class UploadConfigDto
