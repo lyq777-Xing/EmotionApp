@@ -127,7 +127,7 @@ export default function DiaryScreen() {
               styles.progressFill,
               {
                 width: `${getProgressValue() * 100}%`,
-                backgroundColor: isDark ? Colors.dark.tint : Colors.light.tint,
+                backgroundColor: isDark ? Colors.dark.pink : Colors.light.pink,
               },
             ]}
           />
@@ -164,10 +164,10 @@ export default function DiaryScreen() {
                 styles.optionItem,
                 selectedWeather === option.id && styles.selectedOption,
                 selectedWeather === option.id && {
-                  borderColor: isDark ? Colors.dark.tint : Colors.light.tint,
+                  borderColor: isDark ? Colors.dark.pink : Colors.light.pink,
                   backgroundColor: isDark
-                    ? "rgba(255,255,255,0.15)"
-                    : "rgba(10,126,164,0.1)",
+                    ? "rgba(255,64,129,0.15)"
+                    : "rgba(233,30,99,0.1)",
                 },
               ]}
               onPress={() => setSelectedWeather(option.id)}
@@ -178,8 +178,8 @@ export default function DiaryScreen() {
                 color={
                   selectedWeather === option.id
                     ? isDark
-                      ? Colors.dark.tint
-                      : Colors.light.tint
+                      ? Colors.dark.pink
+                      : Colors.light.pink
                     : isDark
                     ? Colors.dark.icon
                     : Colors.light.icon
@@ -190,7 +190,7 @@ export default function DiaryScreen() {
                   styles.optionText,
                   { color: isDark ? Colors.dark.text : Colors.light.text },
                   selectedWeather === option.id && {
-                    color: isDark ? Colors.dark.tint : Colors.light.tint,
+                    color: isDark ? Colors.dark.pink : Colors.light.pink,
                     fontWeight: "bold",
                   },
                 ]}
@@ -224,10 +224,10 @@ export default function DiaryScreen() {
                 styles.optionItem,
                 selectedMood === option.id && styles.selectedOption,
                 selectedMood === option.id && {
-                  borderColor: isDark ? Colors.dark.tint : Colors.light.tint,
+                  borderColor: isDark ? Colors.dark.pink : Colors.light.pink,
                   backgroundColor: isDark
-                    ? "rgba(255,255,255,0.15)"
-                    : "rgba(10,126,164,0.1)",
+                    ? "rgba(255,64,129,0.15)"
+                    : "rgba(233,30,99,0.1)",
                 },
               ]}
               onPress={() => setSelectedMood(option.id)}
@@ -238,7 +238,7 @@ export default function DiaryScreen() {
                   styles.optionText,
                   { color: isDark ? Colors.dark.text : Colors.light.text },
                   selectedMood === option.id && {
-                    color: isDark ? Colors.dark.tint : Colors.light.tint,
+                    color: isDark ? Colors.dark.pink : Colors.light.pink,
                     fontWeight: "bold",
                   },
                 ]}
@@ -280,10 +280,10 @@ export default function DiaryScreen() {
                 styles.optionItem,
                 selectedActivities.includes(option.id) && styles.selectedOption,
                 selectedActivities.includes(option.id) && {
-                  borderColor: isDark ? Colors.dark.tint : Colors.light.tint,
+                  borderColor: isDark ? Colors.dark.pink : Colors.light.pink,
                   backgroundColor: isDark
-                    ? "rgba(255,255,255,0.15)"
-                    : "rgba(10,126,164,0.1)",
+                    ? "rgba(255,64,129,0.15)"
+                    : "rgba(233,30,99,0.1)",
                 },
               ]}
               onPress={() => toggleActivity(option.id)}
@@ -295,8 +295,8 @@ export default function DiaryScreen() {
                 color={
                   selectedActivities.includes(option.id)
                     ? isDark
-                      ? Colors.dark.tint
-                      : Colors.light.tint
+                      ? Colors.dark.pink
+                      : Colors.light.pink
                     : isDark
                     ? Colors.dark.icon
                     : Colors.light.icon
@@ -307,7 +307,7 @@ export default function DiaryScreen() {
                   styles.optionText,
                   { color: isDark ? Colors.dark.text : Colors.light.text },
                   selectedActivities.includes(option.id) && {
-                    color: isDark ? Colors.dark.tint : Colors.light.tint,
+                    color: isDark ? Colors.dark.pink : Colors.light.pink,
                     fontWeight: "bold",
                   },
                 ]}
